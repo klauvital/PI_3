@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block titulo %} Login {% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="container">
+      <div class="row">
+        <div class="col-md">
+          <br><br>
+          <h4>Olá Proprietário(a): <b>{{ user.get_full_name }}</b></h4>
+          <hr>
+          <div class="content">
+              <p> O objetivo deste sistema é suprir a necessidade apontada pelo setor
+imobiliário em relação à precificação de imóveis, que não possui uma maneira fácil,
+              padronizada e acessível que possa ser aplicada.</p>
+              <p> Estamos oferecendo um sistema web
+de precificação, que encontre um valor aproximado para determinado imóvel, com base em
+comparação com outros imóveis com características similares. Para isso, haverá o desenvolvimento de um
+banco de dados de imóveis da região de Ribeirão Preto, que servirá como ponto de partida para
+a criação de uma calculadora de precificação, que comparará algumas características específicas
+                  utilizadas nas avaliações de imóveis, com os imóveis dessa base de dados desenvolvida. </p>
+              <p>Para utilização do sistema, favor fazer seu <a href="{% url 'proprietario_avaliador_add' %}">CADASTRO</a>   para depois <a href="{% url 'login' %}" >ENTRAR</a> no sistema.</p>
+              <p style="font-size: large"><b>Colabore cadastrando seu imóvel e assim poderemos manter um banco de dados mais robusto e uma avaliação mais precisa.</b></p>
+
+
+          </div>
+      </br></br></br>
+      <div class="row">
+
+      <div class="col-6">
+        {% if user.get_full_name != Null %}
+           <a class="breadcrumb red" href="{% url 'logout' %}">Sair</a>
+
+        {% else %}
+
+            <a href="{% url 'login' %}" class="btn btn-info btn-lg" >Entrar</a>
+            <a href="{% url 'proprietario_avaliador_add' %}" class="btn btn-warning btn-lg">Cadastro</a>
+
+        {% endif %}
+
+      </div>
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

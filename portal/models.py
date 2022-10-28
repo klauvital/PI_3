@@ -80,6 +80,19 @@ class Vidautil(models.Model):
     def __str__(self):
         return self.nome
 
+class Proprietario(models.Model):
+    nome = models.CharField(max_length=200)
+    sobrenome = models.CharField(max_length=200, blank=True, null=True)
+    celular = models.CharField(max_length=200)
+    cpf = models.CharField(max_length=20)
+    email = models.EmailField(blank=True, null=True)
+    cidade = models.CharField(max_length=200)
+
+    class Meta:
+       ordering = ['nome']
+
+    def __str__(self):
+        return "{} - {} - {} ".format(self.nome, self.cpf, self.email)
 
 status_choices = (
         ('1', 'Oferta'),
@@ -101,6 +114,9 @@ class Imovel(models.Model):
     tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE, blank=True)
     corretor = models.ForeignKey(Corretor, on_delete=models.CASCADE, blank=True)
     vidautil = models.ForeignKey(Vidautil, on_delete=models.CASCADE, blank=True,  verbose_name='Vida Útil')  # Field name made lowercase.
+    proprietario = models.ForeignKey(Proprietario,
+        on_delete=models.CASCADE,blank=True, null=True, verbose_name='Proprietario'
+    )
 
     def __str__(self):
         return "{} - {} - {} - {} - {} - {} ".format(self.padrao.nome, self.tipo.nome, self.nomecondominio.nome, self.estadoconser.nome, self.corretor.nome, self.vidautil.nome)
@@ -115,7 +131,8 @@ class Imovel(models.Model):
             metro_quadrado = ((self.valordevenda) / (self.aconstruida))
             return round(float(metro_quadrado),2)
 
-
     def get_absolute_url(self):
         return reverse("editar", kwargs={"imovel_pk": self.id})
+
+
 

@@ -1,5 +1,5 @@
 from django import forms
-from portal.models import Imovel, Nomecondominio, Estadoconser, Padrao, Tipo
+from portal.models import Imovel, Nomecondominio, Estadoconser, Padrao, Tipo, Proprietario
 
 
 status_choices = (
@@ -62,4 +62,14 @@ class NomecondominioForm(forms.ModelForm):
 
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+class ProprietarioForm(forms.ModelForm):
+    class Meta:
+        model = Proprietario
+        exclude = ()
+
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control'})
+
         }

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Corretor, Estadoconser, Imovel, Nomecondominio, Padrao, Tabelarossheideck, Tipo, Vidautil
+from .models import Corretor, Estadoconser, Imovel, Nomecondominio, Padrao, Tabelarossheideck, Tipo, Vidautil, Proprietario
 
 admin.site.register(Corretor)
 admin.site.register(Estadoconser)
@@ -9,3 +9,4 @@ admin.site.register(Padrao)
 admin.site.register(Tabelarossheideck)
 admin.site.register(Tipo)
 admin.site.register(Vidautil)
+admin.site.register(Proprietario)

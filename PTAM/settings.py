@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'bootstrapform',
     'django_filters',
     'portal.apps.PortalConfig',
+    'portal.accounts',
 ]
 
 MIDDLEWARE = [

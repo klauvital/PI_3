@@ -3,7 +3,7 @@ from portal import views
 
 urlpatterns = [
 
-    path('', views.home, name='home'),
+    path('home/', views.home, name='home'),
     path('retorno/', views.TesteRetorno, name='retorno'),
     path('avaliacao', views.filtraCondominio, name='avaliacao'),
     path('referenciais/', views.referenciais, name='referenciais'),
@@ -23,5 +23,8 @@ urlpatterns = [
     path('tipo/add', views.tipo_add, name='tipo_add'),
     path('padrao/', views.padrao, name='padrao'),
     path('padrao/add', views.padrao_add, name='padrao_add'),
-
+    path('proprietario/add/', views.proprietario_add, name='imovel_add'),
+    path('imovel/edit/<int:imovel_pk>/', views.proprietario_edit, name='editar'),
+    path('imovel/delete/<int:imovel_pk>/', views.proprietario_delete, name='imovel_delete'),
+    path('', views.index, name='index'),  # noqa E501
 ]

@@ -2,12 +2,12 @@ import decimal
 import math
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
+from portal.forms import ImovelForm, PadraoForm, NomecondominioForm, EstadoconserForm, TipoForm, ImovelFormFilter, ProprietarioForm
+from portal.models import Imovel, Padrao, Nomecondominio, Estadoconser, Tipo, Tabelarossheideck, Vidautil, Proprietario
 
 
-
-from portal.forms import ImovelForm, PadraoForm, NomecondominioForm, EstadoconserForm, TipoForm, ImovelFormFilter
-from portal.models import Imovel, Padrao, Nomecondominio, Estadoconser, Tipo, Tabelarossheideck, Vidautil
-
+def index(request):
+    return render(request, 'portal/index.html')
 
 def home(request):
     #imovel_form = ImovelForm(request.POST or None)
@@ -78,7 +78,7 @@ def referenciais(request):
             cont = 0
             media_m2 = 0
             gordura = 0
-            valorAvaliacao = ''
+            valorAvaliacao = 0
             vidautil = 0
             valor_tabela = 0
             desconto_oferta = 0
@@ -302,7 +302,7 @@ def cond_edit(request, cond_pk):
     return render(request, 'portal/cond_edit.html', context)
 
 def cond_delete(request, cond_pk):
-    condominio = Imovel.objects.get(pk=cond_pk)
+    condominio = Nomecondominio.objects.get(pk=cond_pk)
     condominio.delete()
 
     return redirect('condominio')
@@ -349,3 +349,38 @@ def tipo_add(request):
     }
 
     return render(request, 'portal/tipo_add.html', context)
+
+def proprietario_add(request):
+    form = ProprietarioForm(request.POST or None)
+
+    if request.POST:
+        if form.is_valid():
+            form.save()
+            return redirect('proprietario')
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'portal/proprietario_add.html', context)
+
+
+def proprietario_edit(request, proprietario_pk):
+    proprietario = Proprietario.objects.get(pk=proprietario_pk)
+
+    form = ProprietarioForm(request.POST or None, instance=proprietario)
+
+    if request.POST:
+        if form.is_valid():
+            form.save()
+            return redirect('proprietario')
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'portal/proprietario_edit.html', context)
+
+def proprietario_delete(request, proprietario_pk):
+    proprietario = Proprietario.objects.get(pk=proprietario_pk)
+    proprietario.delete()
+
+    return redirect('proprietario')
