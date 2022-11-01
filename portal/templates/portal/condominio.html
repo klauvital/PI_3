@@ -14,7 +14,9 @@
             <th>Logradouro</th>
             <th>Cidade</th>
             <th>UF</th>
-            <th>Ações</th>
+            {% if user.get_full_name == 'clauhernandez.sistemas@gmail.com' %}
+                <th>Ações</th>
+            {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -25,9 +27,11 @@
              <td>{{ condominio.endereco }}</td>
              <td>{{ condominio.cidade }}</td>
              <td>{{ condominio.uf }}</td>
-             <td><a class ="btn btn-warning" href="{% url 'cond_edit' condominio.id %}" >Editar</a>
-                 <a class ="btn btn-danger" href="{% url 'cond_delete' condominio.id %}" onclick="return confirm ('Tem certeza que deseja excluir este imóvel?')">Excluir</a>
-             </td>
+             {% if user.get_full_name == 'clauhernandez.sistemas@gmail.com' %}
+                 <td><a class ="btn btn-warning" href="{% url 'cond_edit' condominio.id %}" >Editar</a>
+                     <a class ="btn btn-danger" href="{% url 'cond_delete' condominio.id %}" onclick="return confirm ('Tem certeza que deseja excluir este imóvel?')">Excluir</a>
+                 </td>
+             {% endif %}
          </tr>
          {% endfor %}
       </tbody>

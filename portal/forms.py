@@ -1,5 +1,39 @@
 from django import forms
-from portal.models import Imovel, Nomecondominio, Estadoconser, Padrao, Tipo, Proprietario
+from portal.models import Imovel, Nomecondominio, Estadoconser, Padrao, Tipo, Proprietario, Vidautil
+from portal.services import has_group
+from django.contrib.auth.models import User
+
+
+class CustomUserForm(forms.ModelForm):
+    first_name = forms.CharField(
+        label='Nome',
+        max_length=150,
+    )
+    last_name = forms.CharField(
+        label='Sobrenome',
+        max_length=150,
+    )
+    email = forms.EmailField(
+        label='E-mail',
+    )
+
+    class Meta:
+        fields = ('first_name', 'last_name', 'email')
+
+    def __init__(self, user=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if kwargs['instance']:
+            user_instance = kwargs['instance'].user
+
+        if user:
+            self.fields['first_name'].initial = user_instance.first_name
+            self.fields['last_name'].initial = user_instance.last_name
+            self.fields['email'].initial = user_instance.email
+
+            if not has_group(user, 'proprietario_avaliador'):
+                self.fields['first_name'].widget.attrs['readonly'] = True
+                self.fields['last_name'].widget.attrs['readonly'] = True
 
 
 status_choices = (
@@ -8,6 +42,18 @@ status_choices = (
     )
 
 class ImovelForm(forms.ModelForm):
+    dtacadastro = forms.DateField(
+        label='Data Cadastro',
+        required=False,
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                'type': 'date',
+                'class': 'form-control'
+            }),
+        input_formats=('%Y-%m-%d',),
+    )
+
     class Meta:
         model = Imovel
         fields = '__all__'
@@ -15,14 +61,15 @@ class ImovelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['dtacadastro'].widget.attrs.update({'class': 'mask-date'})
-        for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
-
+        #user = User.objects.GET.get('username').first()
+        #consultor = Proprietario.objects.filter(email=user)
+        #self.fields['consultor'].consultor = consultor.nome
 
 class ImovelFormFilter(forms.ModelForm):
     class Meta:
         model = Imovel
         exclude=('valordevenda', 'dtacadastro', 'corretor', 'vidautil', 'status')
+
 
 class TipoForm(forms.ModelForm):
     class Meta:
@@ -64,12 +111,50 @@ class NomecondominioForm(forms.ModelForm):
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-class ProprietarioForm(forms.ModelForm):
+class ProprietarioAddForm(CustomUserForm):
+    required_css_class = 'required'
+
     class Meta:
         model = Proprietario
-        exclude = ()
+        fields = '__all__'
 
-        widgets = {
-            'nome': forms.TextInput(attrs={'class': 'form-control'})
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['cpf'].widget.attrs.update({'class': 'mask-cpf'}) # noqa E501
 
-        }
+
+class ProprietarioUpdateForm(CustomUserForm):
+    required_css_class = 'required'
+
+    class Meta:
+        model = Proprietario
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['cpf'].widget.attrs.update({'class': 'mask-cpf'}) # noqa E501
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        user = instance.user
+
+        first_name = self.cleaned_data['first_name']
+        last_name = self.cleaned_data['last_name']
+        email = self.cleaned_data['email']
+
+        if commit:
+            user.username = email
+            user.email = email
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+
+            instance.save()
+        return instance
+
+
+
+
+
+

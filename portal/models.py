@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class Corretor(models.Model):
@@ -80,19 +81,35 @@ class Vidautil(models.Model):
     def __str__(self):
         return self.nome
 
+BOOLEAN_CHOICES = (
+        (None, 'Selecionar '),
+        (True, 'Sim'),
+        (False, 'Não'),
+    )
+
 class Proprietario(models.Model):
-    nome = models.CharField(max_length=200)
-    sobrenome = models.CharField(max_length=200, blank=True, null=True)
-    celular = models.CharField(max_length=200)
-    cpf = models.CharField(max_length=20)
-    email = models.EmailField(blank=True, null=True)
-    cidade = models.CharField(max_length=200)
+    nome = models.CharField('Nome', max_length=200)
+    sobrenome = models.CharField('Sobrenome',  max_length=200, blank=True, null=True)
+    celular = models.CharField('Celular',max_length=200)
+    whatsApp = models.BooleanField('WhatsApp ?', default=False, blank=True, null=True)
+    cpf = models.CharField('CPF', max_length=20)
+    email = models.EmailField('Email')
+    cidade = models.CharField('Cidade', max_length=200)
+    corretor = models.BooleanField('Corretor', default=False, blank=True, null=True)
+    imobiliaria = models.BooleanField('Imobiliária', default=False, blank=True, null=True)
+    dono = models.BooleanField('Proprietário', default=False, blank=True, null=True)
 
     class Meta:
        ordering = ['nome']
 
     def __str__(self):
-        return "{} - {} - {} ".format(self.nome, self.cpf, self.email)
+        return "{} - {} - {} - {} ".format(self.nome, self.cpf, self.email, self.dono)
+
+    def get_absolute_url_add(self):
+        return reverse("proprietario_add", kwargs={"pk": self.id})
+
+    def get_absolute_url(self):
+        return reverse("proprietario_edit", kwargs={"pk": self.id})
 
 status_choices = (
         ('1', 'Oferta'),
@@ -100,7 +117,7 @@ status_choices = (
     )
 
 class Imovel(models.Model):
-    valordevenda = models.DecimalField(db_column='valorDeVenda', max_digits=10, decimal_places=2, blank=False, null=False, default=0, verbose_name='Valor de venda')  # Field name made lowercase.
+    valordevenda = models.DecimalField(db_column='Valor Pretendido', max_digits=10, decimal_places=2, blank=False, null=False, default=0, verbose_name='Valor de venda')  # Field name made lowercase.
     nomecondominio = models.ForeignKey(Nomecondominio, on_delete=models.CASCADE,  blank=True, null=True, verbose_name='Condominio')
     idade = models.IntegerField(blank=True)
     bairro = models.CharField(max_length=100, blank=True)
@@ -112,14 +129,15 @@ class Imovel(models.Model):
     padrao = models.ForeignKey(Padrao, on_delete=models.CASCADE, blank=True)
     estadoconser = models.ForeignKey(Estadoconser, on_delete=models.CASCADE, blank=True, verbose_name='Estado de Conservação')  # Field name made lowercase.
     tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE, blank=True)
-    corretor = models.ForeignKey(Corretor, on_delete=models.CASCADE, blank=True)
     vidautil = models.ForeignKey(Vidautil, on_delete=models.CASCADE, blank=True,  verbose_name='Vida Útil')  # Field name made lowercase.
-    proprietario = models.ForeignKey(Proprietario,
-        on_delete=models.CASCADE,blank=True, null=True, verbose_name='Proprietario'
-    )
+    consultor = models.ForeignKey(Proprietario, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Consultor')
+
+
+    class Meta:
+        ordering = ['-dtacadastro']
 
     def __str__(self):
-        return "{} - {} - {} - {} - {} - {} ".format(self.padrao.nome, self.tipo.nome, self.nomecondominio.nome, self.estadoconser.nome, self.corretor.nome, self.vidautil.nome)
+        return "{} - {} - {} - {} - {} - {} - {} - {} - {}  ".format(self.padrao.nome, self.tipo.nome, self.nomecondominio.nome, self.estadoconser.nome, self.vidautil.nome, self.consultor.nome, self.consultor.corretor, self.consultor.whatsApp, self.corretor.celular)
 
     def __float__(self):
         return "{} - {} - {}".format(self.valordevenda, self.aconstruida, self.atotal)
@@ -135,4 +153,25 @@ class Imovel(models.Model):
         return reverse("editar", kwargs={"imovel_pk": self.id})
 
 
+class Avaliacao(models.Model):
+    data_avaliacao =models.DateField('Data Avaliação')
+    imovel = models.ForeignKey(Imovel, on_delete=models.CASCADE, blank=True)
+    valor_metro_quadrado = models.DecimalField('Valor m²', max_digits=20, decimal_places=2)
+    valor_metro_quadrado_final=models.DecimalField('Valor Final m² ', max_digits=20, decimal_places=2)
+    desconto_oferta = models.DecimalField('Valor m²', max_digits=20, decimal_places=2)
+    valor_da_coluna = models.CharField('Coluna', max_length=1)
+    idade_em_perc = models.DecimalField('Idade em % vida', max_digits=6,decimal_places=2)
+    valor_avaliacao = models.DecimalField('Valor Avaliação', max_digits=10,decimal_places=2)
+    ross_heideck = models.ForeignKey(Tabelarossheideck, on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ['-data_avaliacao']
+
+    def __str__(self):
+        return "{} - {} - {} - {} ".format(self.imovel.tipo.nome, self.imovel.nomecondominio.nome, self.imovel.estadoconser.nome,  self.imovel.vidautil.nome,  self.imovel.proprietario.nome)
+
+    def __float__(self):
+        return "{} - {} - {}- {} - {} - {}- {} - {}- {}".format(self.imovel.aconstruida, self.valor_metro_quadrado, self.valor_metro_quadrado_final, self.imovel.valordevenda, self.imovel.aconstruida, self.imovel.atotal, self.desconto_oferta, self.idade_em_perc, self.valor_avaliacao)
+
+    def get_absolute_url(self):
+        return reverse("avaliacao_edit", kwargs={"avaliacao_pk": self.id})

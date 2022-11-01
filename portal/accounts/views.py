@@ -8,8 +8,9 @@ from django.contrib.messages import constants
 from django.shortcuts import redirect, render, resolve_url
 from django.urls import reverse_lazy
 from portal.models import Proprietario
-from .forms import ProprietarioAvaliadorForm
 from .services import proprietario_avaliador_create
+from portal.services import has_group
+from .forms import ProprietarioAvaliadorForm
 
 
 def proprietario_avaliador_add(request):
@@ -46,7 +47,8 @@ def custom_login(request):
             auth_login(request, user_auth)
             # return redirect(resolve_url(settings.LOGIN_REDIRECT_URL))
             user = user_auth
-            return redirect('home')
+            return redirect(resolve_url('home'))
+
 
         # Caso não esteja autenticado.
         messages.add_message(request, constants.ERROR, 'Usuário ou senha não conferem !')  # noqa E501
@@ -60,5 +62,7 @@ class CustomLoginView(LoginView):
 
     def get_default_redirect_url(self):
         user = self.request.user
+
+
 
 

@@ -23,8 +23,9 @@ urlpatterns = [
     path('tipo/add', views.tipo_add, name='tipo_add'),
     path('padrao/', views.padrao, name='padrao'),
     path('padrao/add', views.padrao_add, name='padrao_add'),
-    path('proprietario/add/', views.proprietario_add, name='imovel_add'),
-    path('imovel/edit/<int:imovel_pk>/', views.proprietario_edit, name='editar'),
-    path('imovel/delete/<int:imovel_pk>/', views.proprietario_delete, name='imovel_delete'),
+    path('proprietario/add/', views.ProprietarioCreateView.as_view(), name='proprietario_form'),
+    path('<int:pk>/edit/', views.ProprietarioUpdateView.as_view(), name='proprietario_edit'),
+    #path('<int:pk>/edit/', views.ProprietarioUpdateView.as_view(), name='edit'),
+    path('proprietario/delete/<int:proprietario_pk>/', views.proprietario_delete, name='proprietario_delete'),
     path('', views.index, name='index'),  # noqa E501
 ]

@@ -2,16 +2,22 @@ import decimal
 import math
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
-from portal.forms import ImovelForm, PadraoForm, NomecondominioForm, EstadoconserForm, TipoForm, ImovelFormFilter, ProprietarioForm
+from django.contrib.auth.mixins import LoginRequiredMixin as LRM
+from portal.forms import ImovelForm, PadraoForm, NomecondominioForm, EstadoconserForm, TipoForm, ImovelFormFilter, ProprietarioAddForm, ProprietarioUpdateForm
 from portal.models import Imovel, Padrao, Nomecondominio, Estadoconser, Tipo, Tabelarossheideck, Vidautil, Proprietario
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.contrib.auth.models import User
 
+from .services import (
+    add_to_group_proprietario,
+    user_create
+)
 
 def index(request):
     return render(request, 'portal/index.html')
 
 def home(request):
-    #imovel_form = ImovelForm(request.POST or None)
-    #context = {'imovel_form': imovel_form}
+
     return render(request, 'portal/home.html')
 
 def TesteRetorno(request):
@@ -210,7 +216,6 @@ def imovel(request):
     }
     return render(request, 'portal/imoveis.html', context)
 
-
 def ross(request):
     ross = Tabelarossheideck.objects.all()
     context = {
@@ -227,11 +232,11 @@ def vida_util(request):
 
 
 def imovel_add(request):
-    form = ImovelForm(request.POST or None)
+    form = ImovelForm(instance=imovel)
     if request.POST:
         if form.is_valid():
             form.save()
-            return redirect('imoveis')
+            return redirect('home')
 
     context = {
         'form': form,
@@ -350,37 +355,63 @@ def tipo_add(request):
 
     return render(request, 'portal/tipo_add.html', context)
 
-def proprietario_add(request):
-    form = ProprietarioForm(request.POST or None)
+class ProprietarioCreateView(LRM, CreateView):
+    model = Proprietario
+    form_class = ProprietarioAddForm
 
-    if request.POST:
-        if form.is_valid():
-            form.save()
-            return redirect('proprietario')
+    def form_valid(self, form):
+        # Cria o User.
+        user = user_create(form)
 
-    context = {
-        'form': form,
-    }
-    return render(request, 'portal/proprietario_add.html', context)
+        self.object = form.save(commit=False)
+
+        # Associa o User ao Proprietario
+        self.object.user = user
+
+        # Adiciona o Responsavel ao grupo 'proprietario'.
+        add_to_group_proprietario(form, user)
+
+        # Associa a Familia.
+        usuario = self.request.user.usuarios.first()
+        familia = usuario.familia
+        self.object.familia = familia
+        self.object.save()
+
+        return super().form_valid(form)
+
+class ProprietarioUpdateView(LRM, UpdateView):
+    model = Proprietario
+    form_class = ProprietarioUpdateForm
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        return super(ProprietarioUpdateView, self).dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
 
-def proprietario_edit(request, proprietario_pk):
-    proprietario = Proprietario.objects.get(pk=proprietario_pk)
+'''
+def proprietario_edit(request, id):
+    proprietario = User.objects.get(id=id)
 
     form = ProprietarioForm(request.POST or None, instance=proprietario)
 
     if request.POST:
         if form.is_valid():
             form.save()
-            return redirect('proprietario')
+            return redirect('home')
 
     context = {
         'form': form,
     }
     return render(request, 'portal/proprietario_edit.html', context)
-
+'''
 def proprietario_delete(request, proprietario_pk):
     proprietario = Proprietario.objects.get(pk=proprietario_pk)
     proprietario.delete()
 
-    return redirect('proprietario')
+    return redirect('home')

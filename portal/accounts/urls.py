@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path
-
 from portal.accounts import views as v
+
 
 urlpatterns = [
     # path('login/', v.CustomLoginView.as_view(), name='login'),  # noqa E501

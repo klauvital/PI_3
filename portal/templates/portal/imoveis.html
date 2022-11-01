@@ -23,7 +23,10 @@
             <th>EC</th>
             <th>Idade</th>
             <th>Valor</th>
-            <th>Acões</th>
+            <th>Proprietário</th>
+            {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
+                <th>Acões</th>
+            {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -43,11 +46,13 @@
              <td>{{ imovel.estadoconser.nome }} </td>
              <td>{{ imovel.idade }} </td>
              <td>{{ imovel.valordevenda }} </td>
-
-             <td>
-                 <a class ="btn btn-warning btn-sm" href="{% url 'editar' imovel.id %}">Editar</a>
-                 <a class ="btn btn-danger btn-sm" href="{% url 'imovel_delete' imovel.id %}" onclick="return confirm ('Tem certeza que deseja excluir o imovel de id: {{ imovel.id }} ?  ')">Excluir</a>
-             </td>
+             <td>{{ imovel.proprietario }} </td>
+             {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
+                 <td>
+                     <a class ="btn btn-warning btn-sm" href="{% url 'editar' imovel.id %}">Editar</a>
+                     <a class ="btn btn-danger btn-sm" href="{% url 'imovel_delete' imovel.id %}" onclick="return confirm ('Tem certeza que deseja excluir o imovel de id: {{ imovel.id }} ?  ')">Excluir</a>
+                 </td>
+             {% endif %}
          </tr>
          {% endfor %}
       </tbody>

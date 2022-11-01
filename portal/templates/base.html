@@ -21,7 +21,7 @@
   <header>
       <nav class="navbar navbar-expand navbar-dark bg-dark mb-0">
         <nav class="container">
-          <a class="navbar-brand" href="{% url 'index' %}">Avalie seu imóvel</a>
+          <a class="navbar-brand" href="{% url 'index' %}">Avalie seu imóvel {% if user.get_full_name != Null %} {{ ':' }} <b>{{  user.get_full_name }}</b>{% endif %} </a>
         </nav>
       <nav>
           {% if user.get_full_name != Null %}

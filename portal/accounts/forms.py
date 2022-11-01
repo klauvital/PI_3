@@ -4,25 +4,52 @@ from django.contrib.auth.models import User
 
 
 class ProprietarioAvaliadorForm(UserCreationForm):
+
+
     first_name = forms.CharField(
         label='Nome',
         max_length=150,
     )
+
     last_name = forms.CharField(
         label='Sobrenome',
         max_length=150,
     )
+
     email = forms.EmailField(
         label='E-mail',
     )
+
     celular = forms.CharField(
         label='Celular',
     )
+
+    whatsApp = forms.BooleanField(
+        label='WhatsApp',
+        required=False,
+    )
+
     cpf = forms.CharField(
         label='CPF',
     )
+
     cidade = forms.CharField(
-        label='Cidade'
+        label='Cidade',
+    )
+
+    imobiliaria = forms.BooleanField(
+        label='Imobiliaria',
+        required=False,
+    )
+
+    corretor = forms.BooleanField(
+        label='Corretor',
+        required=False,
+    )
+
+    proprietario = forms.BooleanField(
+        label='Proprietário',
+        required=False,
     )
 
     password1 = forms.CharField(widget=forms.PasswordInput, label='Senha')
@@ -30,4 +57,10 @@ class ProprietarioAvaliadorForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'celular', 'cpf', 'cidade','password1', 'password2')
+        fields = ('first_name', 'last_name', 'email', 'celular', 'whatsApp' ,'cpf', 'cidade','imobiliaria', 'corretor', 'proprietario', 'password1', 'password2')
+
+
+
+
+
+

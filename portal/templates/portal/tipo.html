@@ -11,7 +11,9 @@
         <tr>
             <th>Codigo</th>
             <th>Nome</th>
-            <th>Ações</th>
+            {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
+                <th>Ações</th>
+            {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -20,9 +22,11 @@
              <td>{{ tipo.id  }} </td>
              <td>{{ tipo.nome }}</td>
 
-             <td><button class='btn btn-warning'>Editar</button>
-                 <button class='btn btn-danger'>Excluir</button>
-             </td>
+             {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
+                 <td><button class='btn btn-warning'>Editar</button>
+                     <button class='btn btn-danger'>Excluir</button>
+                 </td>
+             {% endif %}
          </tr>
          {% endfor %}
       </tbody>

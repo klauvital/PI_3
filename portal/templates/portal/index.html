@@ -29,10 +29,7 @@ a criação de uma calculadora de precificação, que comparará algumas caracte
       <div class="row">
 
       <div class="col-6">
-        {% if user.get_full_name != Null %}
-           <a class="breadcrumb red" href="{% url 'logout' %}">Sair</a>
-
-        {% else %}
+        {%  if not user.get_full_name != Null %}
 
             <a href="{% url 'login' %}" class="btn btn-info btn-lg" >Entrar</a>
             <a href="{% url 'proprietario_avaliador_add' %}" class="btn btn-warning btn-lg">Cadastro</a>
