@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.urls import reverse, reverse_lazy
 
 
 class Corretor(models.Model):
@@ -111,6 +112,7 @@ class Proprietario(models.Model):
     def get_absolute_url(self):
         return reverse("proprietario_edit", kwargs={"pk": self.id})
 
+
 status_choices = (
         ('1', 'Oferta'),
         ('2', 'Vendido')
@@ -130,7 +132,7 @@ class Imovel(models.Model):
     estadoconser = models.ForeignKey(Estadoconser, on_delete=models.CASCADE, blank=True, verbose_name='Estado de Conservação')  # Field name made lowercase.
     tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE, blank=True)
     vidautil = models.ForeignKey(Vidautil, on_delete=models.CASCADE, blank=True,  verbose_name='Vida Útil')  # Field name made lowercase.
-    consultor = models.ForeignKey(Proprietario, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Consultor')
+    consultor = models.ForeignKey(Proprietario, on_delete=models.CASCADE, blank=True, null=True, related_name ='Consultor')
 
 
     class Meta:
@@ -150,7 +152,26 @@ class Imovel(models.Model):
             return round(float(metro_quadrado),2)
 
     def get_absolute_url(self):
-        return reverse("editar", kwargs={"imovel_pk": self.id})
+        return reverse("imovel_detail", kwargs={"pk": self.id})
+
+
+    @property
+    def list_url(self):
+        return reverse_lazy('imovel_list')
+
+    @property
+    def update_url(self):
+        if self.pk:
+            kw = {'pk': self.pk}
+            return reverse_lazy('#', kwargs=kw)
+        return None
+
+    @property
+    def delete_url(self):
+        if self.pk:
+            kw = {'pk': self.pk}
+            return reverse_lazy('#', kwargs=kw)
+        return None
 
 
 class Avaliacao(models.Model):

@@ -2,3 +2,11 @@
   content: " *";
   color: red;
 }
+@media screen and (max-width: 576px) {
+  .offset-3  {
+    margin-left: 20%;
+}
+  .col-6 {
+    max-width: 70%;
+}
+}

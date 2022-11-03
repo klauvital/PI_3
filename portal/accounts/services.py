@@ -26,6 +26,7 @@ def proprietario_avaliador_create(form, user):
     # Cria o Proprietario.
     #proprietario = Proprietario.objects.filter(email=user.email)
     #if not proprietario:
+
     Proprietario.objects.create(
         nome=user.first_name,
         sobrenome=user.last_name,
@@ -39,15 +40,16 @@ def proprietario_avaliador_create(form, user):
         dono=proprietario,
         )
 
-    # Como é o Proprietario_Avaliador,
-    # adiciona a permissão can_add_imovel.
-    add_permissions('proprietario_avaliador', ['add_imovel'])
-
-    # Adiciona ao grupo 'proprietario'.
-    group = Group.objects.get(name='proprietario')
+    # Adiciona ao grupo.
+    if corretor:
+        group = Group.objects.get(name='corretor')
+    elif imobiliaria:
+        group = Group.objects.get(name='imobiliaria')
+    elif proprietario:
+        group = Group.objects.get(name='proprietario')
     user.groups.add(group)
 
-
+    add_permissions('proprietario_avaliador', ['add_imovel'])
 
 
 

@@ -1,5 +1,3 @@
-import decimal
-import math
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin as LRM
@@ -7,6 +5,7 @@ from portal.forms import ImovelForm, PadraoForm, NomecondominioForm, Estadoconse
 from portal.models import Imovel, Padrao, Nomecondominio, Estadoconser, Tipo, Tabelarossheideck, Vidautil, Proprietario
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from django.contrib.auth.models import User
+
 
 from .services import (
     add_to_group_proprietario,
@@ -191,6 +190,7 @@ def referenciais(request):
             }
             return render(request, 'portal/referenciais_nulo.html', context=context)
 
+
 def imovel_edit(request, imovel_pk):
     imovel = get_object_or_404(Imovel, pk=imovel_pk)
     form = ImovelForm(instance=imovel)
@@ -203,18 +203,63 @@ def imovel_edit(request, imovel_pk):
             imovel.save()
             return redirect('imoveis')
         else:
-            return render(request, 'portal/imovel_edit.html', {'form': form, 'post': imovel})
+            return render(request, '', {'form': form, 'post': imovel})
 
     elif (request.method == 'GET'):
-        return render(request, 'portal/imovel_edit.html', {'form': form, 'post': imovel})
+        return render(request, 'portal/', {'form': form, 'post': imovel})
 
 
-def imovel(request):
-    imoveis = Imovel.objects.all()
-    context = {
-        'imoveis': imoveis
-    }
-    return render(request, 'portal/imoveis.html', context)
+class ImovelListView(LRM, ListView):
+    model = Imovel
+
+    def get_queryset(self):
+        user = self.request.user.username
+        queryset = Imovel.objects.filter(consultor__email=user)  # noqa E501
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['labels'] = (
+            'Data cadastro',
+            'Tipo',
+            'Condomínio',
+            'Bairro',
+            'Cidade',
+            'AC',
+            'AT',
+            'Estátus',
+            'Padrão',
+            'EC',
+            'Idade',
+            'Valor',
+            'Consultor',
+
+        )
+        return context
+
+
+class ImovelDetailView(LRM, DetailView):
+    model = Imovel
+
+
+class ImovelCreateView(LRM, CreateView):
+    model = Imovel
+    form_class = ImovelForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
+class ImovelUpdateView(LRM, UpdateView):
+    model = Imovel
+    form_class = ImovelForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
 
 def ross(request):
     ross = Tabelarossheideck.objects.all()
@@ -232,7 +277,7 @@ def vida_util(request):
 
 
 def imovel_add(request):
-    form = ImovelForm(instance=imovel)
+    form = ImovelForm(request.POST or None)
     if request.POST:
         if form.is_valid():
             form.save()
@@ -250,7 +295,7 @@ def imovel_delete(request, imovel_pk):
     return redirect('imoveis')
 
 
-def padrao (request):
+def padrao(request):
     padrao = Padrao.objects.all()
     context = {
         'padrao': padrao

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Imóveis {% endblock %}
+
+
+{% block content %}
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <div class="d-sm-flex align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Imóveis</h6>
+        <a href="{% url 'imovel_add' %}" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+          class="fas fa-plus fa-sm text-white-50"></i> Adicionar</a>
+      </div>
+    </div>
+     <div class="card-body">
+      <div>
+        <table
+          class="table table-responsive"
+        >
+          <thead>
+            <tr>
+              {% for label in labels %}
+                <th>{{ label }}</th>
+              {% endfor %}
+              {% if object.consultor == user.get_object %}
+                 <th style="min-width:8rem">Acões</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {%  for object in object_list %}
+                <tr>
+                    <td> {{ object.dtacadastro|date:"d/m/Y" }} </td>
+                    <td> {{ object.tipo.nome }} </td>
+                    <td> {{ object.nomecondominio.nome }} </td>
+                    <td> {{ object.bairro }} </td>
+                    <td> {{ object.cidade }} </td>
+                    <td> {{ object.aconstruida }} </td>
+                    <td> {{ object.atotal }} </td>
+                    <td> {{ object.get_status_display }} </td>
+                    <td> {{ object.padrao.nome }} </td>
+                    <td> {{ object.estadoconser.nome }} </td>
+                    <td> {{ object.idade }} </td>
+                    <td> <a href="{{ object.get_absolute_url }}">{{ object.valordevenda }}</a></td>
+                    <td> {{ object.consultor.nome }} </td>
+                        {% if object.consultor.email == user.email %}
+                            <td>
+                                <a class ="btn btn-warning btn-sm" href="{% url 'imovel_edit' object.pk %}">Editar</a>
+                            </td>
+                        {% endif %}
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+      event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    });
+
+    htmx.on("htmx:afterSwap", function(evt) {
+      if (evt.target.id == 'linkDeletar'
+      ) {
+        location.reload();
+      }
+    });
+  </script>
+{% endblock js %}

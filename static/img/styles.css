@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+
+.p {
+    color: #000000;
+}
+.corpo-texto{
+   text-align: justify;
+   font-size: large;
+   color: #090909;
+   margin: 3%;
+}
+.table-responsive{
+    scrollbar-width: none;
+    overflow-x: hidden;
+ }
+
+td {
+  color: #2B2B2C;
+}
+thead{
+  background-color: #D8D8D8;
+}
+.sorting {
+  color: #2B2B2C;
+}
+
+#menu-h{
+    margin: 0 auto;
+    text-align: center;
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+    background-color: rgb(37, 37, 39);
+}
+
+#menu-h ul {
+    list-style: none;
+    padding: 0;
+}
+
+#menu-h ul li {
+    display: inline;
+}
+
+#menu-h ul li a {
+    color: #FFF;
+    padding: 20px;
+    display: inline-block;
+    text-decoration: none;
+    transition: background .4s;
+}
+
+#menu-h ul li a:hover {
+    background-color: rgb(24, 139, 233);
+}
+
+#sair {
+    background-size: auto;
+    background-color: darkred;
+
+}
+
+/* Dispositivos extra small (telefones em modo retrato, com menos de 576px)*/
+@media (max-width: 575.98px) {
+
+}
+/* Dispositivos small (telefones em modo paisagem, com 576px ou mais)*/
+@media (min-width: 576px) and (max-width: 767.98px) {
+
+}
+
+/* Dispositivos médios (tablets com 768px ou mais)*/
+@media (min-width: 768px) and (max-width: 991.98px) {
+
+}
+
+/* Dispositivos large (desktops com 992px ou mais)*/
+@media (min-width: 992px) and (max-width: 1199.98px) {
+
+}
+
+/* Dispositivos extra large (desktops grandes com 1200px ou mais)*/
+@media (min-width: 1200px) {
+
+}

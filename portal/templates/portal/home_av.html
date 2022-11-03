@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <br><br>
+      <div style=" margin-left: 5%">
+        <h4>Olá <b>{{ user.get_full_name }}</b></h4>
+          <hr>
+        Preencha os dados do imóvel avaliando: </div>
+    </br></br>
+    <div style="margin-left: 5%">
+       <form action="{% url 'referenciais' %}" method="post">
+            {% csrf_token %}
+            <table>
+              <tr>
+                  <td><label for="nome">Uso  :</label> </td>
+                  <td><select id="uso" name="uso" >
+                        <option value="Residencial" selected>Residencial</option>
+                        <option value="Comercial">Comercial</option>
+                        <option value="Misto">Misto</option>
+                    </select></td>
+                  <td>&ensp;&ensp;&ensp;&ensp;</td>
+                  <td> <label for="nome">Tipo :</label> </td>
+                  <td> <select id="tipo" name="tipo">
+                        <option value="Apartamento" selected>Apartamento</option>
+                        <option value="Casa_condominio">Casa_condominio</option>
+                        <option value="Casa_rua">Casa de Rua</option>
+                        <option value="Sobrado_condominio">Sobrado em Condomínio</option>
+                        <option value="Sobrado_rua" >Sobrado de Rua</option>
+                        <option value="Terreno">Terreno</option>
+                        <option value="Chacara">Chácara</option>
+                        <option value="Sitio">Sítio</option>
+                        <option value="Área">Área</option>
+                    </select></td>
+                  <td>&ensp;&ensp;&ensp;&ensp;</td>
+                  <td> <label for="estadoConserv">Conservação:</label></td>
+                  <td><select name="estadoConserv" id="estadoConserv">
+                        <option value="Novo"selected>Novo</option>
+                        <option value="Entre novo e regular">Entre novo e regular</option>
+                        <option value="Regular">Regular</option>
+                        <option value="Entre regular e reparos simples">Entre regular e reparos simples</option>
+                        <option value="Reparos simples" >Reparos simples</option>
+                        <option value="Entre reparos simples e importantes">Entre reparos simples e importantes</option>
+                       </select>
+                  </td>
+
+                  <td>&ensp;&ensp;&ensp;&ensp;</td>
+                  <td>&ensp;&ensp;&ensp;&ensp;</td>
+              </tr>
+              <tr>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+              </tr>
+              <tr>
+                  <td> <label for="padrao">Padrão:</label></td>
+                  <td>  <select name="padrao" id="estadoConserv">
+                        <option value="Altíssimo">Altíssimo</option>
+                        <option value="Alto" selected>Alto</option>
+                        <option value="Médio-alto">Médio-alto</option>
+                        <option value="Médio-Baixo">Médio-Baixo</option>
+                        <option value="Baixo">Baixo</option>
+                    </select></td>
+                  <td>&ensp;&ensp;&ensp;&ensp;</td>
+                  <td> <label for="idade">Idade:</label></td>
+                  <td> <input type="number" id="idade" name="idade" size="10" /> </td>
+                  <td>&ensp;&ensp;&ensp;&ensp;</td>
+                  <td> <label for="areaTotal">Área total:</label></td>
+                  <td> <input type="number" id="atotal" name="atotal" size="10" placeholder="m²"/> </td>
+                  <td> <label for="areaConst">Área útil:</label></td>
+                  <td> <input type="number" id="aconstruida"  name="aconstruida" size="10" placeholder="m²" /></td>
+              </tr>
+              <tr>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+
+              </tr>
+              <tr>
+                  <td> <label for="condominio">Condomínio:</label></td>
+                  <td> <input type="text" name="condominio" id="condominio" size="30" /> </td>
+                  <td>&ensp;&ensp;&ensp;&ensp;</td>
+                  <td> <label for="bairro">Bairro:</label></td>
+                  <td> <input type="text" name="bairro" id="bairro" size="10" /> </td>
+                  <td>&ensp;&ensp;&ensp;&ensp;</td>
+                  <td> <label for="cidade">Cidade:</label></td>
+                  <td> <input type="text" id="cidade" name="cidade" size="10" /> </td>
+                  <td> <label for="uf">UF:</label></td>
+                  <td> <select id="estado" name="estado">
+                        <option value="AC">Acre</option>
+                        <option value="AL">Alagoas</option>
+                        <option value="AP">Amapá</option>
+                        <option value="AM">Amazonas</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="DF">Distrito Federal</option>
+                        <option value="ES">Espírito Santo</option>
+                        <option value="GO">Goiás</option>
+                        <option value="MA">Maranhão</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PA">Pará</option>
+                        <option value="PB">Paraíba</option>
+                        <option value="PR">Paraná</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="PI">Piauí</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="RN">Rio Grande do Norte</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="RO">Rondônia</option>
+                        <option value="RR">Roraima</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="SP" selected>São Paulo</option>
+                        <option value="SE">Sergipe</option>
+                        <option value="TO">Tocantins</option>
+                  </select> </td>
+
+              </tr>
+              <tr>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+
+              </tr>
+              <tr>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+                   <td>&ensp;&ensp;&ensp;&ensp;</td>
+
+              </tr>
+              <tr style="text-align:center">
+                   <td colspan="10">
+                       <input type="submit" value="Filtrar Referenciais" />
+
+                   </td>
+               </tr>
+
+            </table>
+
+       </form>
+    </div>
+
+{% endblock %}
+

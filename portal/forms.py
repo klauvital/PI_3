@@ -1,7 +1,9 @@
 from django import forms
 from portal.models import Imovel, Nomecondominio, Estadoconser, Padrao, Tipo, Proprietario, Vidautil
 from portal.services import has_group
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404, redirect, render
 
 
 class CustomUserForm(forms.ModelForm):
@@ -41,7 +43,10 @@ status_choices = (
         ('2', 'Vendido')
     )
 
+
 class ImovelForm(forms.ModelForm):
+    required_css_class = 'required'
+
     dtacadastro = forms.DateField(
         label='Data Cadastro',
         required=False,
@@ -58,12 +63,12 @@ class ImovelForm(forms.ModelForm):
         model = Imovel
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user=User, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['dtacadastro'].widget.attrs.update({'class': 'mask-date'})
-        #user = User.objects.GET.get('username').first()
-        #consultor = Proprietario.objects.filter(email=user)
-        #self.fields['consultor'].consultor = consultor.nome
+        user = user.username
+        queryset = Proprietario.objects.filter(email=user)
+        self.fields['consultor'].queryset = queryset
+
 
 class ImovelFormFilter(forms.ModelForm):
     class Meta:

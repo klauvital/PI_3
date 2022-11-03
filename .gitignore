@@ -2,3 +2,14 @@
 db.sqlite3
 .venv
 .env
+*.sqlite3
+__pycache__
+.css/datatables
+.css/all.min.css
+.css/pt-BR.json
+.css/sb-admin-2.css
+.css/sb-admin-2.min.css
+.css/js
+.css/scss
+.css/vendor
+*pages
