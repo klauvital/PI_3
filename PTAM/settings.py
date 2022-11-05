@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+from django.contrib.messages import constants
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -55,6 +56,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
 ]
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+if SESSION_EXPIRE_AT_BROWSER_CLOSE:
+    max_age = None
+    expires = None
 
 ROOT_URLCONF = 'PTAM.urls'
 
@@ -129,4 +134,14 @@ STATICFILES_DIRS = (os.path.join('static'), )
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Django message
+MESSAGE_TAGS = {
+    constants.SUCCESS: 'alert-success',
+    constants.ERROR: 'alert-danger',
+    constants.DEBUG: 'alert-primary',
+    constants.WARNING: 'alert-warning',
+    constants.INFO: 'alert-secondary',
+}
+
+
