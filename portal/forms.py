@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib import messages
 from portal.models import Imovel, Nomecondominio, Estadoconser, Padrao, Tipo, Proprietario, Vidautil
 from portal.services import has_group
 from django.shortcuts import get_object_or_404, redirect, render
@@ -116,28 +117,17 @@ class NomecondominioForm(forms.ModelForm):
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-class ProprietarioAddForm(CustomUserForm):
+class ProprietarioForm(CustomUserForm):
     required_css_class = 'required'
 
     class Meta:
         model = Proprietario
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['cpf'].widget.attrs.update({'class': 'mask-cpf'}) # noqa E501
+        widgets = {
+            'cpf': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
-
-class ProprietarioUpdateForm(CustomUserForm):
-    required_css_class = 'required'
-
-    class Meta:
-        model = Proprietario
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['cpf'].widget.attrs.update({'class': 'mask-cpf'}) # noqa E501
 
     def save(self, commit=True):
         instance = super().save(commit=False)

@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin as LRM
-from portal.forms import ImovelForm, PadraoForm, NomecondominioForm, EstadoconserForm, TipoForm, ImovelFormFilter, ProprietarioAddForm, ProprietarioUpdateForm
+from portal.forms import ImovelForm, PadraoForm, NomecondominioForm, EstadoconserForm, TipoForm, ImovelFormFilter, ProprietarioForm
 from portal.models import Imovel, Padrao, Nomecondominio, Estadoconser, Tipo, Tabelarossheideck, Vidautil, Proprietario
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.messages import constants
+
 
 
 from .services import (
@@ -49,6 +52,38 @@ def filtraCondominio(request):
         'form': form,
     }
     return render(request, 'portal/avaliacao.html', context)
+
+def pesquisa_imovel(request):
+
+    if request.method == "POST":
+        uso = request.POST.get('uso')
+        tipo = request.POST.get('tipo')
+        padrao = request.POST.get('padrao')
+        condominio = request.POST.get('condominio')
+        bairro = request.POST.get('bairro')
+        cidade = request.POST.get('cidade')
+        estado = request.POST.get('estado')
+
+        busca = Q(
+            Q(uso=uso)
+            & Q(nomecondominio__nome=condominio)
+            | Q(bairro=bairro)
+            & Q(padrao__nome=padrao)
+            & Q(tipo__nome=tipo)
+        )
+        dados = (uso, tipo, padrao, condominio, bairro, cidade, estado)
+        Listimovel = Imovel.objects.filter(busca)
+
+        context = {
+            'filtroCond': Listimovel,
+
+        }
+        return render(request, 'portal/pesquisa.html', context=context)
+    else:
+
+        msg = 'Não foi encontrado na base de dados !'
+        messages.add_message(request, constants.ERROR, msg)
+        return render(request, 'portal/pesquisa.html')
 
 
 def referenciais(request):
@@ -220,19 +255,18 @@ class ImovelListView(LRM, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['labels'] = (
-            'Data cadastro',
+            'Data',
             'Tipo',
             'Condomínio',
             'Bairro',
             'Cidade',
             'AC',
-            'AT',
             'Estátus',
             'Padrão',
             'EC',
             'Idade',
             'Valor',
-            'Consultor',
+
 
         )
         return context
@@ -268,6 +302,7 @@ def ross(request):
     }
     return render(request, 'portal/tabela_ross.html', context=context)
 
+
 def vida_util(request):
     util = Vidautil.objects.all()
     context = {
@@ -286,7 +321,7 @@ def imovel_add(request):
     context = {
         'form': form,
     }
-    return render(request, 'portal/imovel_add.html', context)
+    return render(request, 'portal/imovel_form.html', context)
 
 
 def imovel_delete(request, imovel_pk):
@@ -302,6 +337,7 @@ def padrao(request):
     }
     return render(request, 'portal/padrao.html', context)
 
+
 def padrao_add(request):
     form = PadraoForm(request.POST or None)
 
@@ -315,12 +351,14 @@ def padrao_add(request):
     }
     return render(request, 'portal/padrao_add.html', context)
 
+
 def condominio (request):
     condominio = Nomecondominio.objects.all()
     context = {
         'condominio': condominio
     }
     return render(request, 'portal/condominio.html', context)
+
 
 def cond_add(request):
     form = NomecondominioForm(request.POST or None)
@@ -338,7 +376,6 @@ def cond_add(request):
 
 def cond_edit(request, cond_pk):
     condominio = Nomecondominio.objects.get(pk=cond_pk)
-
     form = NomecondominioForm(request.POST or None, instance=condominio)
 
     if request.POST:
@@ -351,11 +388,12 @@ def cond_edit(request, cond_pk):
     }
     return render(request, 'portal/cond_edit.html', context)
 
+
 def cond_delete(request, cond_pk):
     condominio = Nomecondominio.objects.get(pk=cond_pk)
     condominio.delete()
-
     return redirect('condominio')
+
 
 def estadoConserv (request):
     estadoConservacao = Estadoconser.objects.all()
@@ -363,6 +401,7 @@ def estadoConserv (request):
         'estadoCons': estadoConservacao
     }
     return render(request, 'portal/estadoConservacao.html', context)
+
 
 def estadoConserv_add(request):
     form = EstadoconserForm(request.POST or None)
@@ -400,9 +439,10 @@ def tipo_add(request):
 
     return render(request, 'portal/tipo_add.html', context)
 
+
 class ProprietarioCreateView(LRM, CreateView):
     model = Proprietario
-    form_class = ProprietarioAddForm
+    form_class = ProprietarioForm
 
     def form_valid(self, form):
         # Cria o User.
@@ -424,14 +464,20 @@ class ProprietarioCreateView(LRM, CreateView):
 
         return super().form_valid(form)
 
+
+class ProprietarioDetailView(LRM, DetailView):
+    model = Proprietario
+
+    def __init__(self, user=User, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        user = user.username
+        queryset = Proprietario.objects.filter(email=user)
+        return queryset.pk
+
+
 class ProprietarioUpdateView(LRM, UpdateView):
     model = Proprietario
-    form_class = ProprietarioUpdateForm
-
-    def dispatch(self, request, *args, **kwargs):
-        obj = self.get_object()
-
-        return super(ProprietarioUpdateView, self).dispatch(request, *args, **kwargs)
+    form_class = ProprietarioForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -439,22 +485,6 @@ class ProprietarioUpdateView(LRM, UpdateView):
         return kwargs
 
 
-'''
-def proprietario_edit(request, id):
-    proprietario = User.objects.get(id=id)
-
-    form = ProprietarioForm(request.POST or None, instance=proprietario)
-
-    if request.POST:
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-
-    context = {
-        'form': form,
-    }
-    return render(request, 'portal/proprietario_edit.html', context)
-'''
 def proprietario_delete(request, proprietario_pk):
     proprietario = Proprietario.objects.get(pk=proprietario_pk)
     proprietario.delete()

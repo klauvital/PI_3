@@ -1,11 +1,20 @@
 {% load static %}
+ <!-- Custom fonts for this template-->
+
+<link href="{% static 'scss/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+<link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
 
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
   <!-- Sidebar - Brand -->
   <a href="{% url 'home' %}" class="sidebar-brand  bg-gradient-secondary d-flex align-items-center justify-content-center">
 
-    <img style="alignment: center; width: 110px" src="{% static "img/my_img/cardapio.png" %}" alt="Avaliação de Imóveis - Ribeirão Preto" />
+    <img style="alignment: center; width: 70px" src="{% static "buttons/bootstrap-icons-1.9.1/house-fill.svg" %}" alt="Avaliação de Imóveis - Ribeirão Preto" />
   </a>
 
   <!-- Divider -->
@@ -17,15 +26,15 @@
   </div>-->
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-      aria-expanded="true" aria-controls="collapseTwo">
-      <i class="fas fa-fw fa-cog"></i>
+      aria-expanded="false" aria-controls="collapseTwo">
+      <img style="alignment: left" src="{% static "buttons/bootstrap-icons-1.9.1/forward.svg" %}"/>
       <span>Imóvel</span>
     </a>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
+    <div id="collapseTwo" class="collapse " aria-labelledby="headingTwo" data-parent="#accordionSidebar" style>
+        <div class="bg-white py-2 collapse-inner rounded">
         <a class="collapse-item" href="{% url 'imovel_list' %}"> Meus Imóveis </a>
         <a class="collapse-item" href="{% url 'imovel_add' %}">Adicionar Imóvel</a>
-        <a class="collapse-item" href="#">Pesquisar Imóveis</a>
+        <a class="collapse-item" href="{% url 'pesquisa' %}">Pesquisar Imóveis</a>
 
       </div>
     </div>
@@ -37,7 +46,7 @@
     <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
       aria-expanded="true" aria-controls="collapseUtilities">
-      <i class="fas fa-fw fa-cog"></i>
+      <img style="alignment: left" src="{% static "buttons/bootstrap-icons-1.9.1/forward.svg" %}"/>
       <span>Condomínios</span>
     </a>
     <div id="collapseUtilities" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -52,7 +61,7 @@
   <!-- Nav Item - Tables -->
   <li class="nav-item">
     <a class="nav-link" href="{% url 'padrao' %}">
-      <i class="fas fa-fw fa-table"></i>
+      <img style="alignment: left" src="{% static "buttons/bootstrap-icons-1.9.1/forward.svg" %}"/>
       <span>Padrão</span></a>
   </li>
 
@@ -61,14 +70,14 @@
 
   <li class="nav-item">
     <a class="nav-link" href="{% url 'tipo' %}">
-      <i class="fas fa-fw fa-table"></i>
+      <img style="alignment: left" src="{% static "buttons/bootstrap-icons-1.9.1/forward.svg" %}"/>
       <span>Tipo</span></a>
   </li>
   <hr class="sidebar-divider">
 
   <li class="nav-item">
     <a class="nav-link" href="{% url 'estadoConservacao' %}">
-      <i class="fas fa-fw fa-table"></i>
+      <img style="alignment: left" src="{% static "buttons/bootstrap-icons-1.9.1/forward.svg" %}"/>
       <span>Estado de Conservação</span></a>
   </li>
 
@@ -77,7 +86,7 @@
 
   <li class="nav-item">
     <a class="nav-link" href="{% url 'util' %}">
-      <i class="fas fa-fw fa-table"></i>
+      <img style="alignment: left" src="{% static "buttons/bootstrap-icons-1.9.1/forward.svg" %}"/>
       <span>Vida Útil </span></a>
   </li>
 
@@ -87,7 +96,7 @@
   <hr class="sidebar-divider">
    <li class="nav-item">
     <a class="nav-link" href="{% url 'ross' %}">
-      <i class="fas fa-fw fa-table"></i>
+      <img style="alignment: left" src="{% static "buttons/bootstrap-icons-1.9.1/forward.svg" %}"/>
       <span>Tabela Ross- Heideck </span></a>
   </li>
 
@@ -96,9 +105,11 @@
 <!-- Divider-->
 <hr class="sidebar-divider d-none d-md-block">
 
-<!-- Sidebar Toggler (Sidebar)-->
+<!-- Sidebar Toggler -->
 <div class="text-center d-none d-md-inline">
   <button class="rounded-circle border-0" id="sidebarToggle"></button>
 </div>
 
 </ul>
+
+

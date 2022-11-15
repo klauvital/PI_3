@@ -1,18 +1,27 @@
-{% extends 'base_login.html' %}
+{% extends 'base_old.html' %}
 {% load bootstrap %}
+
 {% block title %}Cadastro{% endblock %}
 
 {% block content %}
-  <div class="card">
-    <div class="alert alert-success" role="alert"> Faca seu cadastro para acessar o sistema !</div>
-    <div class="container">
-      <h2>Cadastro</h2>
 
-      <form method="post">
-        {% csrf_token %}
-        {{ form|bootstrap }}
-        <button class="btn btn-success" type="submit">Cadastrar</button>
-      </form>
+<div class="card-header py-0">
+   <div class="alert alert-success" role="alert"> Faca seu cadastro para acessar o sistema !
+   </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body col-6 offset-3">
+            <form action="." method="POST">
+                {% csrf_token %}
+                {{  form|bootstrap }}
+
+                <div class="float-right">
+                  <button class="btn btn-primary" type="submit">Salvar</button>
+                </div>
+
+            </form>
+        </div>
     </div>
-  </div>
-{% endblock %}
+ </div>
+
+{% endblock content %}

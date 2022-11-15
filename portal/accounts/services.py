@@ -2,6 +2,11 @@ from django.contrib.auth.models import Group
 from portal.services import add_permissions
 from portal.models import Proprietario
 from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+
 
 
 def proprietario_avaliador_create(form, user):
@@ -13,7 +18,7 @@ def proprietario_avaliador_create(form, user):
     cpf = form.cleaned_data.pop('cpf')
     corretor = form.cleaned_data.pop('corretor')
     imobiliaria = form.cleaned_data.pop('imobiliaria')
-    proprietario = form.cleaned_data.pop('proprietario')
+    dono = form.cleaned_data.pop('dono')
     user.username = email
 
     user.save()
@@ -24,7 +29,7 @@ def proprietario_avaliador_create(form, user):
 
 
     # Cria o Proprietario.
-    #proprietario = Proprietario.objects.filter(email=user.email)
+    #Proprietario.objects.create(user=user)
     #if not proprietario:
 
     Proprietario.objects.create(
@@ -37,7 +42,8 @@ def proprietario_avaliador_create(form, user):
         whatsApp=whatsApp,
         corretor=corretor,
         imobiliaria=imobiliaria,
-        dono=proprietario,
+        dono=dono,
+
         )
 
     # Adiciona ao grupo.
@@ -45,11 +51,14 @@ def proprietario_avaliador_create(form, user):
         group = Group.objects.get(name='corretor')
     elif imobiliaria:
         group = Group.objects.get(name='imobiliaria')
-    elif proprietario:
-        group = Group.objects.get(name='proprietario')
+    elif dono:
+        group = Group.objects.get(name='dono')
     user.groups.add(group)
 
     add_permissions('proprietario_avaliador', ['add_imovel'])
+    add_permissions('proprietario', ['add_imovel'])
+    add_permissions('corretor', ['add_imovel'])
+    add_permissions('imobiliaria', ['add_imovel'])
 
 
 

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class = "card">
+<div class="card-body">
+ <h4> Pesquisa </h4>
+ <hr>
+   <div>Dados do imóvel avaliando :
+       <br/> <B>Uso:</B> {{ dados.0 }} , <b>Tipo:</b> {{ dados.1 }},<b> Conservação:</b> {{ dados.2 }},
+       <b>Padrão:</b> {{ dados.3 }},<b> Idade: </b>{{ dados.4 }} ano(s), <b>Área Total:</b> {{ dados.5 }} m²,
+       <b>Área Construída: </b>{{ dados.6 }} m², <b>Condomínio:</b> {{ dados.7 }},
+       <b>Bairro:</b> {{ dados.8 }},<b> Cidade:</b> {{ dados.9 }},<b> Estado: </b>{{ dados.10 }}.
+
+   </div>
+
+ <br/>
+   <div>
+       Lista dos imóveis selecionados de mesmo Padrão, Tipo e Bairro: </div>
+ <br/>
+        <table class = "table table-striped">
+          <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Padrâo</th>
+                <th>Condomínio</th>
+                <th>Bairro</th>
+                <th>AC</th>
+                <th>Status</th>
+                <th>Idade</th>
+                <th>Valor</th>
+
+            </tr>
+
+          </thead>
+          <tbody>
+             {% for imovel in lista %}
+             <tr>
+                 <td>{{ imovel.id }} </td>
+                 <td>{{ imovel.tipo }}</td>
+                 <td>{{ imovel.padrao }} </td>
+                 <td>{{ imovel.condominio }} </td>
+                 <td>{{ imovel.bairro }}</td>
+                 <td>{{ imovel.estatus }} </td>
+                 <td>{{ imovel.valor }} </td>
+
+          </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+
+    <div><h4><b>Média m² = </b> {{ media_metro2 }} <b> x  Área Construída = </b>{{ area_construida  }} =>
+        <b>Valor Avaliado = </b> {{ valor }} </h4></div>
+</div>
+</div>
+{% endblock %}

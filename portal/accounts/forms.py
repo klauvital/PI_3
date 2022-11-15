@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 
 class ProprietarioAvaliadorForm(UserCreationForm):
+    required_css_class = 'required'
 
 
     first_name = forms.CharField(
@@ -31,8 +32,8 @@ class ProprietarioAvaliadorForm(UserCreationForm):
 
     cpf = forms.CharField(
         label='CPF',
-    )
 
+    )
     cidade = forms.CharField(
         label='Cidade',
     )
@@ -47,7 +48,7 @@ class ProprietarioAvaliadorForm(UserCreationForm):
         required=False,
     )
 
-    proprietario = forms.BooleanField(
+    dono = forms.BooleanField(
         label='Proprietário',
         required=False,
     )
@@ -57,10 +58,11 @@ class ProprietarioAvaliadorForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'celular', 'whatsApp' ,'cpf', 'cidade','imobiliaria', 'corretor', 'proprietario', 'password1', 'password2')
+        fields = ('first_name', 'last_name', 'email', 'celular', 'whatsApp', 'cpf', 'cidade', 'imobiliaria', 'corretor', 'dono', 'password1', 'password2')
 
-
-
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['cpf'].widget.attrs.update({'class': 'mask-cpf'})
+        self.fields['celular'].widget.attrs.update({'class': 'mask-cel'})
 
 

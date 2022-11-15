@@ -12,12 +12,14 @@
         <h6 class="m-0 font-weight-bold text-primary">Imóveis</h6>
         <a href="{% url 'imovel_add' %}" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
           class="fas fa-plus fa-sm text-white-50"></i> Adicionar</a>
+        <!--<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+          class="fas fa-download fa-sm text-white-50"></i> PDF</a>-->
       </div>
     </div>
-     <div class="card-body">
-      <div>
+     <div class="card-body col-12 offset-lg-0">
+
         <table
-          class="table table-responsive"
+          class="table table-striped"
         >
           <thead>
             <tr>
@@ -25,7 +27,7 @@
                 <th>{{ label }}</th>
               {% endfor %}
               {% if object.consultor == user.get_object %}
-                 <th style="min-width:8rem">Acões</th>
+                 <th style="min-width:10rem">Acões</th>
               {% endif %}
             </tr>
           </thead>
@@ -38,23 +40,23 @@
                     <td> {{ object.bairro }} </td>
                     <td> {{ object.cidade }} </td>
                     <td> {{ object.aconstruida }} </td>
-                    <td> {{ object.atotal }} </td>
                     <td> {{ object.get_status_display }} </td>
                     <td> {{ object.padrao.nome }} </td>
                     <td> {{ object.estadoconser.nome }} </td>
                     <td> {{ object.idade }} </td>
                     <td> <a href="{{ object.get_absolute_url }}">{{ object.valordevenda }}</a></td>
-                    <td> {{ object.consultor.nome }} </td>
+
                         {% if object.consultor.email == user.email %}
                             <td>
                                 <a class ="btn btn-warning btn-sm" href="{% url 'imovel_edit' object.pk %}">Editar</a>
+                                 <a class ="btn btn-danger btn-sm" href="{% url 'imovel_delete' object.pk %}" onclick="return confirm ('Deseja excluir o registro : {{ object.pk }} ?  ')">Excluir</a>
                             </td>
                         {% endif %}
                 </tr>
             {% endfor %}
           </tbody>
         </table>
-      </div>
+
     </div>
   </div>
 

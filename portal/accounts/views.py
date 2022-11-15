@@ -7,13 +7,13 @@ from django.contrib.auth.views import LoginView
 from django.contrib.messages import constants
 from django.shortcuts import redirect, render, resolve_url
 from django.urls import reverse_lazy
-from portal.models import Proprietario
 from .services import proprietario_avaliador_create
 from portal.services import has_group
 from .forms import ProprietarioAvaliadorForm
 
 
 def proprietario_avaliador_add(request):
+
     template_name = 'accounts/proprietario_avaliador_add.html'
     form = ProprietarioAvaliadorForm(request.POST or None)
     success_url = reverse_lazy('login')
@@ -25,6 +25,10 @@ def proprietario_avaliador_add(request):
             msg = 'Cadastrado com sucesso! Faça seu Login'
             messages.add_message(request, constants.SUCCESS, msg)
             return redirect(success_url)
+        else:
+            msg = 'A senha é fraca, tente uma de oito digitos, combinando letras e numeros'
+            messages.add_message(request, constants.ERROR, msg)
+            return redirect('proprietario_avaliador_add')
 
     context = {'form': form}
 
@@ -53,6 +57,7 @@ def custom_login(request):
         # Caso não esteja autenticado.
         messages.add_message(request, constants.ERROR, 'Usuário ou senha não conferem !')  # noqa E501
         return redirect(resolve_url(settings.LOGIN_REDIRECT_URL))
+
 
     return render(request, template_name, context)
 

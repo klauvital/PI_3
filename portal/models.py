@@ -106,11 +106,26 @@ class Proprietario(models.Model):
     def __str__(self):
         return "{} - {} - {} - {} ".format(self.nome, self.cpf, self.email, self.dono)
 
-    def get_absolute_url_add(self):
-        return reverse("proprietario_add", kwargs={"pk": self.id})
-
     def get_absolute_url(self):
         return reverse("proprietario_edit", kwargs={"pk": self.id})
+
+    @property
+    def list_url(self):
+        return reverse_lazy('#')
+
+    @property
+    def update_url(self):
+        if self.pk:
+            kw = {'pk': self.pk}
+            return reverse_lazy('proprietario_edit', kwargs=kw)
+        return None
+
+    @property
+    def delete_url(self):
+        if self.pk:
+            kw = {'pk': self.pk}
+            return reverse_lazy('#', kwargs=kw)
+        return None
 
 
 status_choices = (
@@ -118,22 +133,45 @@ status_choices = (
         ('2', 'Vendido')
     )
 
+uso_choices = (
+        ('1', 'Residencial'),
+        ('2', 'Comercial'),
+        ('3', 'Misto')
+    )
 class Imovel(models.Model):
-    valordevenda = models.DecimalField(db_column='Valor Pretendido', max_digits=10, decimal_places=2, blank=False, null=False, default=0, verbose_name='Valor de venda')  # Field name made lowercase.
-    nomecondominio = models.ForeignKey(Nomecondominio, on_delete=models.CASCADE,  blank=True, null=True, verbose_name='Condominio')
+    dtacadastro = models.DateField(db_column='dtaCadastro', blank=True, null=True, verbose_name='Data de cadastro')
+    uso = models.CharField('Estado Civil', max_length=1, choices=uso_choices, blank=True, null=True)  # noqa E501
+    tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE, blank=True)
     idade = models.IntegerField(blank=True)
-    bairro = models.CharField(max_length=100, blank=True)
-    cidade = models.CharField(max_length=200, blank=True)
+      # Field name made lowercase.
+    nomecondominio = models.ForeignKey(Nomecondominio, on_delete=models.CASCADE,  blank=True, null=True, verbose_name='Condominio')
+    logradouro = models.CharField(db_column='Logradouro', max_length=200,  blank=True, null=True)
+    complemento = models.CharField(db_column='Complemento', max_length=200,  blank=True, null=True)
+    numero = models.CharField(db_column='Número', max_length=20, blank=True, null=True)
+    sem_numero = models.BooleanField('S/N', default=False, blank=True, null=True)
+    bairro = models.CharField(max_length=100, default='----')
+    cidade = models.CharField(max_length=200, default='Ribeirão Preto')
+    estado = models.CharField(max_length=2, default='SP')
+    numero_dormitorios = models.IntegerField(db_column='Nº dormitórios', default=0)
+    numero_banheiros = models.IntegerField(db_column='Nº total banheiros',default='0' )
+    lavabo = models.BooleanField('Lavabo', default=False, blank=True, null=True)
+    aquec_solar = models.BooleanField('Aquecimento Solar', default=False, blank=True, null=True)
+    suites = models.IntegerField(db_column='Nº Suítes', default=0)
+    churrasqueira = models.BooleanField('Churrasqueira', default=False, blank=True, null=True)
+    quarto_empreg = models.BooleanField('Quarto empregada', default=False, blank=True, null=True)
+    banheiro_empre = models.BooleanField('Banheiro empregada', default=False, blank=True, null=True)
+    vestiario = models.BooleanField('Vestiário', default=False, blank=True, null=True)
+    piscina = models.BooleanField('Piscina', default=False, blank=True, null=True)
+    pisc_aquec = models.BooleanField('Piscina aquecida', default=False, blank=True, null=True)
     aconstruida = models.DecimalField(blank=False, null=False, default=0, max_digits=10, decimal_places=2,  verbose_name='Área Construída/Útil')
     atotal = models.DecimalField(blank=False, null=False, default=0, max_digits=10, decimal_places=2, verbose_name='Área Total')
-    dtacadastro = models.DateField(db_column='dtaCadastro', blank=True, null=True, verbose_name='Data de cadastro')  # Field name made lowercase.
     status = models.CharField(max_length=1, choices=status_choices)
     padrao = models.ForeignKey(Padrao, on_delete=models.CASCADE, blank=True)
     estadoconser = models.ForeignKey(Estadoconser, on_delete=models.CASCADE, blank=True, verbose_name='Estado de Conservação')  # Field name made lowercase.
-    tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE, blank=True)
     vidautil = models.ForeignKey(Vidautil, on_delete=models.CASCADE, blank=True,  verbose_name='Vida Útil')  # Field name made lowercase.
+    valordevenda = models.DecimalField(db_column='Valor Pretendido', max_digits=10, decimal_places=2, blank=False,
+                                  null=False, default=0, verbose_name='Valor de venda')
     consultor = models.ForeignKey(Proprietario, on_delete=models.CASCADE, blank=True, null=True, related_name ='Consultor')
-
 
     class Meta:
         ordering = ['-dtacadastro']

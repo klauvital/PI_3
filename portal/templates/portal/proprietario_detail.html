@@ -1,10 +1,134 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Perfil {% endblock %}
+
+{% block content %}
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <div class="d-sm-flex align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Perfil do Usuário</h6>
+        <a href="{% url 'home' %}" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm">Voltar</a>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table">
+          <tbody>
+           <tr>
+               <td>Nome</td>
+               <td>{{ object.user.get_full_name|default:"---" }}</td>
+           </tr>
+           <tr>
+                <td>CPF</td>
+                <td>{{object.cpf|default:"---"}}</td>
+           </tr>
+           <tr>
+               <td>Email</td>
+               <td>{{object.email|default:"---"}}</td>
+           </tr>
+           <tr>
+               <td>Cidade</td>
+               <td>{{object.cidade|default:"---"}}</td>
+           </tr>
+           <tr>
+              <td>Celular</td>
+              <td>{{object.celular|default:"---"}}</td>
+           </tr>
+           <tr>
+              <td>WhatsApp</td>
+              <td>{{object.whatsApp|default:"---"}}</td>
+           </tr>
+           {% if object.corretor %}
+               <tr>
+                  <td>Corretor</td>
+                  <td>{{object.corretor|default:"---"}}</td>
+               </tr>
+           {% elif object.imobiliaria %}
+               <tr>
+                  <td>Imobiliaria</td>
+                  <td>{{object.imobiliaria|default:"---"}}</td>
+               </tr>
+           {% else %}
+               <tr>
+                   <td>Proprietário</td>
+                   <td>{{object.get_status_display|default:"---"}}</td>
+               </tr>
+           {% endif %}
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+
+
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table">
+          <tbody>
+           <tr>
+               <td>Dta cadastro</td>
+               <td>{{ object.dtacadastro|date:"d/m/Y"|default:"---" }}</td>
+           </tr>
+           <tr>
+                <td>Tipo</td>
+                <td>{{object.tipo.nome|default:"---"}}</td>
+           </tr>
+           <tr>
+               <td>Condomínio</td>
+               <td>{{object.nomecondominio.nome|default:"---"}}</td>
+           </tr>
+           <tr>
+              <td>Bairro</td>
+              <td>{{object.bairro|default:"---"}}</td>
+           </tr>
+           <tr>
+              <td>Cidade</td>
+              <td>{{object.cidade|default:"---"}}</td>
+           </tr>
+           <tr>
+              <td>AC</td>
+              <td>{{object.aconstruida|default:"---"}}</td>
+           </tr>
+           <tr>
+              <td>AT</td>
+              <td>{{object.atotal|default:"---"}}</td>
+           </tr>
+           <tr>
+               <td>Estátus</td>
+               <td>{{object.get_status_display|default:"---"}}</td>
+           </tr>
+           <tr>
+               <td>Padrão</td>
+               <td>{{object.padrao|default:"---"}}</td>
+           </tr>
+           <tr>
+              <td>EC</td>
+              <td>{{object.estadoconser|default:"---"}}</td>
+           </tr>
+           <tr>
+               <td>Idade</td>
+               <td>{{object.idade|default:"---"}}</td>
+           </tr>
+           <tr>
+               <td>Valor</td>
+               <td>{{object.valordevenda|default:"---"}}</td>
+           </tr>
+           <tr>
+               <td>Consultor</td>
+               <td>{{object.consultor|default:"---"}}</td>
+           </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+

@@ -1,39 +1,49 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Estado de Conservação {% endblock %}
+
 
 {% block content %}
-<div class = "card">
-<div class="card-body">
- <h4> Tipos de Estado Conservação </h4>
- <hr>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <div class="d-sm-flex align-items-center justify-content-between">
+         <h6 class="m-0 font-weight-bold text-primary">Lista Estado de Conservação</h6>
 
-  <table class = "table table-striped">
-      <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Código</th>
-            {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
-                <th>Ações</th>
-            {% endif %}
-        </tr>
-      </thead>
-      <tbody>
-         {%  for estadoConser in estadoCons %}
-         <tr>
-             <td>{{ estadoConser.id  }} </td>
-             <td>{{ estadoConser.nome }}</td>
-             <td>{{ estadoConser.codigo }}</td>
+      </div>
+    </div>
+         <div class="card-body col-4 offset-lg-4">
+             <table
+                  class="table table-striped"
+             >
 
-             {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
-                 <td><button class='btn btn-warning'>Editar</button>
-                     <button class='btn btn-danger'>Excluir</button>
-                 </td>
-            {% endif %}
-         </tr>
-         {% endfor %}
-      </tbody>
-  </table>
+                  <thead>
+                      <tr>
+                          <th>ID</th>
+                          <th>Nome</th>
+                          <th>Código</th>
+                            {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
+                                <th>Ações</th>
+                            {% endif %}
+                      </tr>
+                  </thead>
+                  <tbody>
+                     {%  for estadoConser in estadoCons %}
+                     <tr>
+                         <td>{{ estadoConser.id  }} </td>
+                         <td>{{ estadoConser.nome }}</td>
+                         <td>{{ estadoConser.codigo }}</td>
 
-</div>
+                         {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
+                             <td><button class='btn btn-warning'>Editar</button>
+                             </td>
+                         {% endif %}
+
+                     </tr>
+                     {% endfor %}
+                  </tbody>
+             </table>
+
+         </div>
 </div>
 {% endblock %}

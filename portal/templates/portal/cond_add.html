@@ -2,20 +2,21 @@
 {% load bootstrap %}
 
 {% block content %}
- <div class="card">
-    <div class="card-body">
-        <h4>Inserir Condominio</h4>
-        <hr>
-        <div class="container">
-            <form action="{% url 'cond_add' %}" method="post">
-            {% csrf_token %}
-            {{  form|bootstrap }}
-            <button class ="btn btn-success" type="submit">Salvar</button>
-            <button class ="btn btn-warning" onclick="window.location.href='{% url 'condominio' %}'">Cancelar</button>
-        </form>
-        </div>
-
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <div class="d-sm-flex align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary"> Adicionar Condomínio </h6>
+        <a href="{% url 'condominio' %}" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm">Voltar</a>
+      </div>
     </div>
+    <div class="card-body col-6 offset-3">
+            <form action="{% url 'cond_add' %}" method="post">
+                {% csrf_token %}
+                {{  form|bootstrap }}
+                <button class ="btn btn-success" type="submit">Salvar</button>
+                <button class ="btn btn-warning" onclick="window.location.href='{% url 'condominio' %}'">Cancelar</button>
+            </form>
+    </div>
+</div>
 
- </div>
 {% endblock %}
