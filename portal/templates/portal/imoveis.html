@@ -1,63 +1,78 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %} Imóveis {% endblock %}
 
 
 {% block content %}
-<div class = "card">
-<div class="card-body">
- <h4> Imóveis </h4>
- <hr>
- <a class ="btn btn-success" href="{% url 'imovel_add' %}">Inserir</a>
-    <table class = "table table-striped">
-      <thead>
-        <tr>
-            <th>ID</th>
-            <th>Dta cadastro</th>
-            <th>Tipo</th>
-            <th>Condomínio</th>
-            <th>Bairro</th>
-            <th>Cidade</th>
-            <th>AC</th>
-            <th>AT</th>
-            <th>Estátus</th>
-            <th>Padrão</th>
-            <th>EC</th>
-            <th>Idade</th>
-            <th>Valor</th>
-            <th>Proprietário</th>
-            {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
-                <th>Acões</th>
-            {% endif %}
-        </tr>
-      </thead>
-      <tbody>
-         {%  for imovel in imoveis %}
 
-         <tr>
-             <td>{{ imovel.id  }} </td>
-             <td>{{ imovel.dtacadastro  }} </td>
-             <td>{{ imovel.tipo.nome }}</td>
-             <td>{{ imovel.nomecondominio.nome }} </td>
-             <td>{{ imovel.bairro }}</td>
-             <td>{{ imovel.cidade }} </td>
-             <td>{{ imovel.aconstruida }} </td>
-             <td>{{ imovel.atotal }} </td>
-             <td>{{ imovel.status }} </td>
-             <td>{{ imovel.padrao.nome }} </td>
-             <td>{{ imovel.estadoconser.nome }} </td>
-             <td>{{ imovel.idade }} </td>
-             <td>{{ imovel.valordevenda }} </td>
-             <td>{{ imovel.proprietario }} </td>
-             {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
-                 <td>
-                     <a class ="btn btn-warning btn-sm" href="{% url 'editar' imovel.id %}">Editar</a>
-                     <a class ="btn btn-danger btn-sm" href="{% url 'imovel_delete' imovel.id %}" onclick="return confirm ('Tem certeza que deseja excluir o imovel de id: {{ imovel.id }} ?  ')">Excluir</a>
-                 </td>
-             {% endif %}
-         </tr>
-         {% endfor %}
-      </tbody>
-  </table>
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <div class="d-sm-flex align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Imóveis</h6>
+        <a href="{% url 'imovel_add' %}" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+          class="fas fa-plus fa-sm text-white-50"></i> Adicionar</a>
+        <!--<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+          class="fas fa-download fa-sm text-white-50"></i> PDF</a>-->
+      </div>
+    </div>
+     <div class="card-body col-12 offset-lg-0">
 
-</div>
-</div>
-{% endblock %}
+        <table
+          class="table table-striped"
+        >
+          <thead>
+            <tr>
+              {% for label in labels %}
+                <th>{{ label }}</th>
+              {% endfor %}
+              <th style="min-width:10rem">Acões</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {%  for object in object_list %}
+                <tr>
+                    <td> {{ object.dtacadastro|date:"d/m/Y" }} </td>
+                    <td> {{ object.tipo.nome }} </td>
+                    <td> {{ object.nomecondominio.nome }} </td>
+                    <td> {{ object.bairro }} </td>
+                    <td> {{ object.cidade }} </td>
+                    <td> {{ object.aconstruida }} </td>
+                    <td> {{ object.get_status_display }} </td>
+                    <td> {{ object.padrao.nome }} </td>
+                    <td> {{ object.estadoconser.nome }} </td>
+                    <td> {{ object.idade }} </td>
+                    <td> <a href="{{ object.get_absolute_url }}">{{ object.valordevenda }}</a></td>
+
+                        {% if object.consultor.email == user.email %}
+                            <td>
+                                <a class ="btn btn-warning btn-sm" href="{% url 'imovel_edit' object.pk %}">Editar</a>
+                                 <a class ="btn btn-danger btn-sm" href="{% url 'imovel_delete' object.pk %}" onclick="return confirm ('Deseja excluir o registro : {{ object.pk }} ?  ')">Excluir</a>
+                            </td>
+                        {% endif %}
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+    </div>
+  </div>
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+      event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    });
+
+    htmx.on("htmx:afterSwap", function(evt) {
+      if (evt.target.id == 'linkDeletar'
+      ) {
+        location.reload();
+      }
+    });
+  </script>
+{% endblock js %}

@@ -2,10 +2,17 @@
 .p {
     color: #000000;
 }
+.corpo-home{
+   margin-top: 4vh;
+   text-align: center;
+   font-size: large;
+   color:#18181c;
+
+}
 .corpo-texto{
    text-align: justify;
    font-size: large;
-   color: #090909;
+   color: #18181c;
    margin: 3%;
 }
 .table-responsive{
@@ -37,6 +44,15 @@ thead{
 
 .card-body{
   background-color: #F5F5F5;
+}
+
+#barra-home{
+    padding:2vh;
+    font-size-adjust: unset;
+    text-align: Left;
+    box-sizing: border-box;
+    background-color:#B1D2D4;
+
 }
 
 #menu-h{

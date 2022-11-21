@@ -32,10 +32,11 @@
     </a>
     <div id="collapseTwo" class="collapse " aria-labelledby="headingTwo" data-parent="#accordionSidebar" style>
         <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="{% url 'imoveis' %}"> Todos - Imóveis </a>
         <a class="collapse-item" href="{% url 'imovel_list' %}"> Meus Imóveis </a>
-        <a class="collapse-item" href="{% url 'imovel_add' %}">Adicionar Imóvel</a>
-        <a class="collapse-item" href="{% url 'pesquisa' %}">Pesquisar Imóveis</a>
-
+        <a class="collapse-item" href="{% url 'imovel_add' %}"> Adicionar Imóvel </a>
+        <a class="collapse-item" href="{% url 'pesquisa_form' %}"> Pesquisar Imóveis </a>
+        <a class="collapse-item" href="{% url 'pesquisa_list' %}"> Minhas Pesquisas </a>
       </div>
     </div>
   </li>

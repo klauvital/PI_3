@@ -8,7 +8,6 @@ from django.contrib.messages import constants
 from django.shortcuts import redirect, render, resolve_url
 from django.urls import reverse_lazy
 from .services import proprietario_avaliador_create
-from portal.services import has_group
 from .forms import ProprietarioAvaliadorForm
 
 

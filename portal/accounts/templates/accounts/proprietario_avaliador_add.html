@@ -5,23 +5,27 @@
 
 {% block content %}
 
-<div class="card-header py-0">
-   <div class="alert alert-success" role="alert"> Faca seu cadastro para acessar o sistema !
-   </div>
+<div class="alert alert-secondary" role="alert"> Faca seu cadastro para acessar o sistema !</div>
+   <div class="container-sm">
+        <div class="card-body py-4 px-6 col-md-12">
 
-    <div class="card shadow mb-4">
-        <div class="card-body col-6 offset-3">
-            <form action="." method="POST">
-                {% csrf_token %}
-                {{  form|bootstrap }}
+                <form action="." method="POST">
+                    {% csrf_token %}
+                    {{  form|bootstrap }}
 
-                <div class="float-right">
-                  <button class="btn btn-primary" type="submit">Salvar</button>
-                </div>
+                    <div class="float-right">
+                      <button class="btn btn-primary" type="submit">Salvar</button>
+                      <button class="btn btn-warning" type="reset">Limpar</button>
+                    </div>
 
-            </form>
-        </div>
-    </div>
- </div>
+                </form>
+
+            </div>
+
+
+</div>
+<div class="card-footer">
+     <h8 style="align-content: center"> @avalieseuimovel - 2022</h8>
+</div>
 
 {% endblock content %}

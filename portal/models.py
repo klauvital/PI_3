@@ -177,7 +177,7 @@ class Imovel(models.Model):
         ordering = ['-dtacadastro']
 
     def __str__(self):
-        return "{} - {} - {} - {} - {} - {} - {} - {} - {}  ".format(self.padrao.nome, self.tipo.nome, self.nomecondominio.nome, self.estadoconser.nome, self.vidautil.nome, self.consultor.nome, self.consultor.corretor, self.consultor.whatsApp, self.corretor.celular)
+        return "{} - {} - {} - {} - {} - {} - {} - {} - {}  ".format(self.padrao.nome, self.tipo.nome, self.nomecondominio.nome, self.estadoconser.nome, self.vidautil.nome, self.consultor.nome, self.consultor.corretor, self.consultor.whatsApp, self.consultor.celular)
 
     def __float__(self):
         return "{} - {} - {}".format(self.valordevenda, self.aconstruida, self.atotal)
@@ -191,7 +191,6 @@ class Imovel(models.Model):
 
     def get_absolute_url(self):
         return reverse("imovel_detail", kwargs={"pk": self.id})
-
 
     @property
     def list_url(self):
@@ -234,3 +233,35 @@ class Avaliacao(models.Model):
 
     def get_absolute_url(self):
         return reverse("avaliacao_edit", kwargs={"avaliacao_pk": self.id})
+
+
+class Pesquisa(models.Model):
+    data_pesquisa = models.DateField(db_column='data', blank=True, null=True, verbose_name='Data Pesquisa') # noqa E501
+    uso = models.CharField('Uso', max_length=1, choices=uso_choices, blank=True, null=True)  # noqa E501
+    idade = models.IntegerField(blank=True)  # noqa E501
+    estadoconser = models.ForeignKey(Estadoconser, on_delete=models.CASCADE, blank=True,
+                                     verbose_name='Estado de Conservação')  # noqa E501
+    padrao = models.ForeignKey(Padrao, on_delete=models.CASCADE, blank=True) # noqa E501
+    tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE, blank=True)
+    aconstruida = models.DecimalField(blank=False, null=False, default=0, max_digits=10, decimal_places=2,  verbose_name='Área Construída/Útil')
+    atotal = models.DecimalField(blank=False, null=False, default=0, max_digits=10, decimal_places=2, verbose_name='Área Total')
+    nomecondominio = models.ForeignKey(Nomecondominio, on_delete=models.CASCADE, blank=True, null=True,
+                                       verbose_name='Condominio')  # noqa E501
+    bairro = models.CharField(max_length=100, blank=True, null=True, default='----')
+    cidade = models.CharField(max_length=200, default='Ribeirão Preto')
+    estado = models.CharField(max_length=2, default='SP')
+    user_consultor = models.ForeignKey(Proprietario, on_delete=models.CASCADE, blank=True, null=True, related_name='User_Consultor')
+
+
+    class Meta:
+        ordering = ['-data_pesquisa']
+
+    def __str__(self):
+        return "{} - {} - {} - {} ".format(self.tipo.nome, self.nomecondominio.nome, self.estadoconser.nome, self.user_consultor)
+
+    def get_absolute_url(self):
+        return reverse("pesquisa_detail", kwargs={"pk": self.id})
+
+    @property
+    def list_url(self):
+        return reverse_lazy('pesquisa_list')

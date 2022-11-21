@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import messages
-from portal.models import Imovel, Nomecondominio, Estadoconser, Padrao, Tipo, Proprietario, Vidautil
+from portal.models import Imovel, Nomecondominio, Estadoconser, Padrao, Tipo, Proprietario, Vidautil, Pesquisa, User
 from portal.services import has_group
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
@@ -147,6 +147,30 @@ class ProprietarioForm(CustomUserForm):
 
             instance.save()
         return instance
+
+class PesquisaForm(forms.ModelForm):
+    data = forms.DateField(
+        label='Data Pesquisa',
+        required=False,
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                'type': 'date',
+                'class': 'form-control'
+            }),
+        input_formats=('%Y-%m-%d',),
+    )
+
+    class Meta:
+        model = Pesquisa
+        fields = '__all__'
+
+    def __init__(self, user=User, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        usuario = User.objects.first()
+        queryset = Proprietario.objects.filter(email=usuario)
+        self.fields['user_consultor'].queryset = queryset
 
 
 

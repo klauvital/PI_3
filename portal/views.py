@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin as LRM
-from portal.forms import ImovelForm, PadraoForm, NomecondominioForm, EstadoconserForm, TipoForm, ImovelFormFilter, ProprietarioForm
-from portal.models import Imovel, Padrao, Nomecondominio, Estadoconser, Tipo, Tabelarossheideck, Vidautil, Proprietario
+from portal.forms import ImovelForm, PadraoForm, NomecondominioForm, EstadoconserForm, TipoForm, ImovelFormFilter, ProprietarioForm, PesquisaForm
+from portal.models import Imovel, Padrao, Nomecondominio, Estadoconser, Tipo, Tabelarossheideck, Vidautil, Proprietario, Pesquisa
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.messages import constants
+from django.http import request
 
 
 
@@ -22,68 +23,88 @@ def home(request):
 
     return render(request, 'portal/home.html')
 
-def TesteRetorno(request):
-    context = {}
 
-    if request.method == "POST":
-        condominio = request.POST.get ('condominio', None)
-        bairro = request.POST.get('bairro', None)
-
-        erro = {}
-
-        if condominio != "Odila":
-            erro['condominio']= "O nome nao é esperado"
-        if bairro != "Claudia":
-                erro['bairro']= "O nome nao é esperado"
-
-        if erro:
-               context ['erros'] = erro
-        else:
-               # qdo nao tem erro
-               print("Salvando os dados")
-               context['mensagem'] = "Os dados foram salvos com sucesso!"
-
-    return render(request, 'portal/retorno.html', context=context)
+class PesquisaCreateView(LRM, CreateView):
+    model = Pesquisa
+    form_class = PesquisaForm
 
 
-def filtraCondominio(request):
-    form = ImovelFormFilter(request.GET)
-    context = {
-        'form': form,
-    }
-    return render(request, 'portal/avaliacao.html', context)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user.username})
+        return kwargs
 
-def pesquisa_imovel(request):
 
-    if request.method == "POST":
-        uso = request.POST.get('uso')
-        tipo = request.POST.get('tipo')
-        padrao = request.POST.get('padrao')
-        condominio = request.POST.get('condominio')
-        bairro = request.POST.get('bairro')
-        cidade = request.POST.get('cidade')
-        estado = request.POST.get('estado')
+class PesquisaDetailView(LRM, DetailView):
+    model = Pesquisa
 
-        busca = Q(
-            Q(uso=uso)
-            & Q(nomecondominio__nome=condominio)
-            | Q(bairro=bairro)
-            & Q(padrao__nome=padrao)
-            & Q(tipo__nome=tipo)
+
+class PesquisaListView(LRM, ListView):
+    model = Pesquisa
+
+    def get_queryset(self):
+        user = self.request.user.username
+        queryset = Pesquisa.objects.filter(user_consultor__email=user)  # noqa E501
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['labels'] = (
+            'Data',
+            'Uso',
+            'Idade',
+            'Conservação',
+            'Padrão',
+            'Tipo',
+            'AC',
+            'AT',
+            'Condominio',
+            'Bairro',
+            'Cidade',
+            'Estado',
+            'Consultor',
+
         )
-        dados = (uso, tipo, padrao, condominio, bairro, cidade, estado)
-        Listimovel = Imovel.objects.filter(busca)
+
+        return context
+
+
+def pesquisa_imovel(self):
+
+    data = self.request.GET.get('data')
+    uso = self.request.GET.get('uso')
+    idade = self.request.GET.get('idade')
+    conservacao = self.request.GET.get('estadoconser')
+    padrao = self.request.GET.get('padrao')
+    tipo = self.request.GET.get('tipo')
+    aconstruida = self.request.GET.get('aconstruida')
+    atotal = self.request.GET.get('atotal')
+    condominio = self.request.GET.get('nomecondominio')
+    bairro = self.request.GET.get('bairro')
+    cidade = self.request.GET.get('cidade')
+    estado = self.request.GET.get('estado')
+
+    busca = Q(
+        Q(uso=uso) & Q(nomecondominio__nome=condominio)
+        | Q(bairro=bairro) & Q(padrao__nome=padrao) & Q(tipo__nome=tipo)
+       )
+
+    dados = (data, uso, idade, conservacao, padrao, tipo, aconstruida, atotal, bairro, cidade, estado)
+    Listimovel = Imovel.objects.filter(busca)
+
+    if Listimovel.count() != 0:
 
         context = {
             'filtroCond': Listimovel,
+            'dados': dados
 
         }
-        return render(request, 'portal/pesquisa.html', context=context)
-    else:
+        return render(request, 'portal/retorno_pesquisa.html', context=context)
 
+    else:
         msg = 'Não foi encontrado na base de dados !'
         messages.add_message(request, constants.ERROR, msg)
-        return render(request, 'portal/pesquisa.html')
+        return render(request, 'portal/pesquisa_form.html')
 
 
 def referenciais(request):
@@ -271,6 +292,33 @@ class ImovelListView(LRM, ListView):
         )
         return context
 
+class ImovelTodosListView(LRM, ListView):
+    model = Imovel
+
+    def get_queryset(self):
+        user = self.request.user.username
+        queryset = Imovel.objects.all()  # noqa E501
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['labels'] = (
+            'Data',
+            'Tipo',
+            'Condomínio',
+            'Bairro',
+            'Cidade',
+            'AC',
+            'Estátus',
+            'Padrão',
+            'EC',
+            'Idade',
+            'Valor',
+
+
+        )
+        return context
+
 
 class ImovelDetailView(LRM, DetailView):
     model = Imovel
@@ -284,6 +332,7 @@ class ImovelCreateView(LRM, CreateView):
         kwargs = super().get_form_kwargs()
         kwargs.update({'user': self.request.user})
         return kwargs
+
 
 class ImovelUpdateView(LRM, UpdateView):
     model = Imovel
@@ -444,35 +493,14 @@ class ProprietarioCreateView(LRM, CreateView):
     model = Proprietario
     form_class = ProprietarioForm
 
-    def form_valid(self, form):
-        # Cria o User.
-        user = user_create(form)
-
-        self.object = form.save(commit=False)
-
-        # Associa o User ao Proprietario
-        self.object.user = user
-
-        # Adiciona o Responsavel ao grupo 'proprietario'.
-        add_to_group_proprietario(form, user)
-
-        # Associa a Familia.
-        usuario = self.request.user.usuarios.first()
-        familia = usuario.familia
-        self.object.familia = familia
-        self.object.save()
-
-        return super().form_valid(form)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
 
 class ProprietarioDetailView(LRM, DetailView):
     model = Proprietario
-
-    def __init__(self, user=User, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        user = user.username
-        queryset = Proprietario.objects.filter(email=user)
-        return queryset.pk
 
 
 class ProprietarioUpdateView(LRM, UpdateView):

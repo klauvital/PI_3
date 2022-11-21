@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %} Imóveis {% endblock %}
 
@@ -26,9 +27,8 @@
               {% for label in labels %}
                 <th>{{ label }}</th>
               {% endfor %}
-              {% if object.consultor == user.get_object %}
-                 <th style="min-width:10rem">Acões</th>
-              {% endif %}
+              <th style="min-width:10rem">Acões</th>
+
             </tr>
           </thead>
           <tbody>

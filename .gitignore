@@ -1,6 +1,6 @@
 *.pyc
 db.sqlite3
-.venv
+/venv
 .env
 *.sqlite3
 __pycache__
@@ -21,3 +21,4 @@ __pycache__
 .*vendor
 /static/js/datatables/
 /static/scss/
+/static/css/datatables/

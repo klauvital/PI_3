@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %} Pesquisa de Imóveis {% endblock %}
+
+
+{% block content %}
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <div class="d-sm-flex align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Pesquisa de Imóveis</h6>
+      </div>
+    </div>
+     <div class="card-body col-12 offset-lg-0">
+
+        <table
+          class="table table-striped"
+        >
+          <thead>
+            <tr>
+              {% for label in labels %}
+
+                  <th> {{ label }} </th>
+
+              {% endfor %}
+              <th style="min-width:10rem">Acões</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%  for object in object_list %}
+                <tr>
+                    <td> {{ object.data_pesquisa|date:"d/m/Y" }} </td>
+                    <td> {{ object.get_uso_display }} </td>
+                    <td> {{ object.idade }} </td>
+                    <td> {{ object.estadoconser.nome }} </td>
+                    <td> {{ object.padrao.nome }} </td>
+                    <td> {{ object.tipo.nome }} </td>
+                    <td> {{ object.aconstruida }} </td>
+                    <td> {{ object.atotal }} </td>
+                    <td><a href="{{ object.get_absolute_url }}"> {{ object.nomecondominio.nome }}</a> </td>
+                    <td> {{ object.bairro}} </td>
+                    <td> {{ object.cidade }} </td>
+                    <td> {{ object.estado }} </td>
+                    <td> {{ object.user_consultor.nome }}</td>
+
+                    <td style="min-width:10rem">
+                       <a class ="btn btn-warning btn-sm" href="#">Editar</a>
+                       <a class ="btn btn-danger btn-sm" href="#" >Avaliar</a>
+                    </td>
+
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+    </div>
+  </div>
+
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+      event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    });
+
+    htmx.on("htmx:afterSwap", function(evt) {
+      if (evt.target.id == 'linkDeletar'
+      ) {
+        location.reload();
+      }
+    });
+  </script>
+{% endblock js %}
