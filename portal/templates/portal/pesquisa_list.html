@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% load static %}
 {% load widget_tweaks %}
+{% load static %}
 
-{% block title %} Pesquisa de Imóveis {% endblock %}
+{% block title %} Lista de Pesquisas {% endblock %}
 
 
 {% block content %}
@@ -10,7 +10,8 @@
   <div class="card shadow mb-4">
     <div class="card-header py-3">
       <div class="d-sm-flex align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Pesquisa de Imóveis</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Lista de Pesquisas</h6>
+        <a href="{% url 'pesquisa_form' %}" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm">Adicionar</a>
       </div>
     </div>
      <div class="card-body col-12 offset-lg-0">
@@ -31,7 +32,7 @@
           <tbody>
             {%  for object in object_list %}
                 <tr>
-                    <td> {{ object.data_pesquisa|date:"d/m/Y" }} </td>
+                    <td> {{ object.data|date:"d/m/Y" }} </td>
                     <td> {{ object.get_uso_display }} </td>
                     <td> {{ object.idade }} </td>
                     <td> {{ object.estadoconser.nome }} </td>
@@ -47,7 +48,7 @@
 
                     <td style="min-width:10rem">
                        <a class ="btn btn-warning btn-sm" href="#">Editar</a>
-                       <a class ="btn btn-danger btn-sm" href="#" >Avaliar</a>
+                       <a class ="btn btn-danger btn-sm" href="{% url 'busca' object.pk %}" >Avaliar</a>
                     </td>
 
                 </tr>

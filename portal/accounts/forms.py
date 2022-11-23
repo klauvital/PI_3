@@ -39,18 +39,21 @@ class ProprietarioAvaliadorForm(UserCreationForm):
     )
 
     imobiliaria = forms.BooleanField(
-        label='Imobiliaria',
+        label='Imobiliária',
         required=False,
+        initial=None,
     )
 
     corretor = forms.BooleanField(
         label='Corretor',
         required=False,
+        initial=None,
     )
 
     dono = forms.BooleanField(
         label='Proprietário',
         required=False,
+        initial=None,
     )
 
     password1 = forms.CharField(widget=forms.PasswordInput, label='Senha')

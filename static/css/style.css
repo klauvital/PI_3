@@ -2,6 +2,25 @@
 .p {
     color: #000000;
 }
+
+
+.font_topicos{
+   color: #02091e;
+   margin-bottom: 20px;
+   padding-bottom: 15px;
+   padding-top: 20px;
+
+}
+#form-quadro{
+   display: flex;
+   background-color: white;
+   color: #18181c;
+   border-color: #18181c;
+   overflow-x: hidden;
+   margin-inline-end: 10px;
+}
+
+
 .corpo-home{
    margin-top: 4vh;
    text-align: center;
@@ -16,8 +35,7 @@
    margin: 3%;
 }
 .table-responsive{
-    scrollbar-width: none;
-    overflow-x: hidden;
+   overflow-x: hidden;
  }
 
 td {
@@ -95,5 +113,10 @@ thead{
    font-size: small;
    color: #090909;
    margin: 3%;
+}
+.table-responsive{
+   text-align: Left;
+   font-size: small;
+    overflow-x: scroll;
 }
 }

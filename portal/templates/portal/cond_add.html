@@ -9,13 +9,15 @@
         <a href="{% url 'condominio' %}" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm">Voltar</a>
       </div>
     </div>
-    <div class="card-body col-6 offset-3">
+    <div class="container-fluid">
+        <div class="card-body col-8 offset-2">
             <form action="{% url 'cond_add' %}" method="post">
                 {% csrf_token %}
                 {{  form|bootstrap }}
                 <button class ="btn btn-success" type="submit">Salvar</button>
                 <button class ="btn btn-warning" onclick="window.location.href='{% url 'condominio' %}'">Cancelar</button>
             </form>
+        </div>
     </div>
 </div>
 

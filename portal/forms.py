@@ -1,3 +1,5 @@
+from sys import maxsize
+
 from django import forms
 from django.contrib import messages
 from portal.models import Imovel, Nomecondominio, Estadoconser, Padrao, Tipo, Proprietario, Vidautil, Pesquisa, User
@@ -55,14 +57,82 @@ class ImovelForm(forms.ModelForm):
             format='%Y-%m-%d',
             attrs={
                 'type': 'date',
-                'class': 'form-control'
+                'class': 'form|bootstrap'
             }),
         input_formats=('%Y-%m-%d',),
     )
+    sem_numero = forms.BooleanField(
+        label='Sem número',
+        required=False,
+        initial=None,
+    )
+    pe_direito_alto = forms.BooleanField(
+        label='Pé Direito Alto',
+        required=False,
+        initial=None,
+    )
+    idade = forms.IntegerField(
+        label='Idade',
+        required=True,
+    )
+    estado = forms.CharField(
+        label='UF',
+        required=True,
+        max_length=2,
+        min_length=2,
+
+    )
+    atotal =forms.DecimalField(
+        label='AC',
+        initial=0,
+
+    )
+    lavabo = forms.BooleanField(
+        label='Lavabo',
+        required=False,
+        initial=None,
+    )
+    banheiro_empre = forms.BooleanField(
+        label='Banheiro empregada',
+        required=False,
+        initial=None,
+    )
+    quarto_empreg = forms.BooleanField(
+        label='Quarto empregada',
+        required=False,
+        initial=None,
+    )
+    churrasqueira = forms.BooleanField(
+        label='Churrasqueira',
+        required=False,
+        initial=None,
+    )
+    piscina = forms.BooleanField(
+        label='Piscina',
+        required=False,
+        initial=None,
+    )
+    pisc_aquec = forms.BooleanField(
+        label='Pisc. Aquecida',
+        required=False,
+        initial=None,
+    )
+    vestiario = forms.BooleanField(
+        label='Vestiário',
+        required=False,
+        initial=None,
+    )
+    aquec_solar = forms.BooleanField(
+        label='Aquecimento Solar',
+        required=False,
+        initial=None,
+    )
+
 
     class Meta:
         model = Imovel
         fields = '__all__'
+
 
     def __init__(self, user=User, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
-{% load static %}
 {% load widget_tweaks %}
+{% load static %}
+{% load bootstrap %}
+
 
 {% block content %}
-<div class="card shadow mb-4">
+ <div class="card shadow mb-4">
     <div class="card-header py-3">
       <div class="d-sm-flex align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary">{% if object.pk %}
@@ -14,33 +16,57 @@
         <a href="{% url 'imovel_list' %}" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm">Voltar</a>
       </div>
     </div>
-    <div class="card-body col-6 offset-3">
-      <form action="." method="POST">
-        {% csrf_token %}
+         <div class="container-fluid">
+              <div class="card-body col-8 offset-2">
+                  <form action="." method="POST">
+                    {% csrf_token %}
 
-        {% for field in form.visible_fields %}
-          <div class="mb-3 form-group{% if field.errors %} has-error {% endif %}">
-            <label for="{{ field.id_for_label }}">
-              {% if field.field.required %}
-                <span class="required">{{ field.label }}</span>
-              {% else %}
-                {{ field.label }}
-              {% endif %}
-            </label>
+                    {% for field in form.visible_fields %}
+                        <div class="mb-3 form-group{% if field.errors %} has-error {% endif %}">
+                            <label for="{{ field.id_for_label }}">
+                              {% if field.field.required %}
+                                <span class="required">{{ field.label }}</span>
+                              {% else %}
+                                {{ field.label }}
+                              {% endif %}
+                            </label>
 
-            {% render_field field class="form-control" %}
+                            {% if field.label == 'Vestiário' %}
+                                {% render_field field class="form|bootstrap" %}
+                            {% elif field.label == 'Piscina' %}
+                                {% render_field field class="form|bootstrap" %}
+                            {% elif field.label == 'Pisc. Aquecida' %}
+                                {% render_field field class="form|bootstrap" %}
+                            {% elif field.label == 'Sem número' %}
+                                {% render_field field class="form|bootstrap" %}
+                            {% elif field.label == 'Aquecimento Solar' %}
+                                {% render_field field class="form|bootstrap" %}
+                            {% elif field.label == 'Lavabo' %}
+                                {% render_field field class="form|bootstrap" %}
+                            {% elif field.label == 'Pé Direito Alto' %}
+                                {% render_field field class="form|bootstrap" %}
+                            {% elif field.label == 'Churrasqueira' %}
+                                {% render_field field class="form|bootstrap" %}
+                            {% elif field.label == 'Quarto empregada' %}
+                                {% render_field field class="form|bootstrap" %}
+                            {% elif field.label == 'Banheiro empregada' %}
+                                {% render_field field class="form|bootstrap" %}
+                            {% else %}
+                                {% render_field field class="form-control" %}
+                            {% endif %}
+                            {% for error in field.errors %}
+                              <span class="text-muted">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
 
-            {% for error in field.errors %}
-              <span class="text-muted">{{ error }}</span>
-            {% endfor %}
-          </div>
-        {% endfor %}
+                    <div class="float-right">
+                      <button class="btn btn-primary" type="submit">Salvar</button>
+                    </div>
 
-        <div class="float-right">
-          <button class="btn btn-primary" type="submit">Salvar</button>
-        </div>
+                  </form>
+              </div>
+         </div>
 
-      </form>
-    </div>
 </div>
 {% endblock content %}

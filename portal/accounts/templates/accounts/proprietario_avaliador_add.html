@@ -1,4 +1,5 @@
 {% extends 'base_old.html' %}
+{% load widget_tweaks %}
 {% load bootstrap %}
 
 {% block title %}Cadastro{% endblock %}
@@ -9,23 +10,53 @@
    <div class="container-sm">
         <div class="card-body py-4 px-6 col-md-12">
 
-                <form action="." method="POST">
-                    {% csrf_token %}
-                    {{  form|bootstrap }}
+            <form action="." method="POST">
+               {% csrf_token %}
+               {% for field in form.visible_fields %}
+                  <div class="mb-3 form-group{% if field.errors %} has-error {% endif %}">
+                    <label for="{{ field.id_for_label }}">
+                      {% if field.field.required %}
+                        <span class="required">{{ field.label }}</span>
+                      {% else %}
+                        {{ field.label }}
+                      {% endif %}
+                    </label>
+
+                     {% if field.label == 'CPF' %}
+                        {% render_field field class="form-control mask-cpf" %}
+                     {% elif field.label == 'Celular' %}
+                         {% render_field field class="form-control mask-cel" %}
+                     {% elif field.label == 'WhatsApp' %}
+                         {% render_field field class="form|bootstrap" %}
+                     {% elif field.label == 'Imobiliária' %}
+                         {% render_field field class="form|bootstrap" %}
+                     {% elif field.label == 'Corretor' %}
+                         {% render_field field class="form|bootstrap" %}
+                     {% elif field.label == 'Proprietário' %}
+                         {% render_field field class="form|bootstrap" %}
+                     {% else %}
+                         {% render_field field class="form-control" %}
+                     {% endif %}
+
+                    {% for error in field.errors %}
+                      <span class="text-muted">{{ error }}</span>
+                    {% endfor %}
+
+
+               </div>
+               {% endfor %}
 
                     <div class="float-right">
                       <button class="btn btn-primary" type="submit">Salvar</button>
                       <button class="btn btn-warning" type="reset">Limpar</button>
                     </div>
-
-                </form>
-
-            </div>
+            </form>
+        </div>
 
 
-</div>
-<div class="card-footer">
-     <h8 style="align-content: center"> @avalieseuimovel - 2022</h8>
-</div>
+   </div>
+   <div class="card-footer">
+         <h8 style="align-content: center"> @avalieseuimovel - 2022</h8>
+   </div>
 
 {% endblock content %}

@@ -5,6 +5,7 @@ from portal import views as v
 imovel_urlpatterns = [
 
     path('', v.ImovelListView.as_view(), name='imovel_list'),  # noqa E501
+    path('busca/<int:pk>/', v.pesquisa_imovel, name='busca'),
     path('todos/', v.ImovelTodosListView.as_view(), name='imoveis'),
     path('<int:pk>/', v.ImovelDetailView.as_view(), name='imovel_detail'),  # noqa E501
     path('add/', v.ImovelCreateView.as_view(), name='imovel_add'),  # noqa E501
@@ -25,6 +26,8 @@ pesquisa_urlpatterns = [
     path('add/', v.PesquisaCreateView.as_view(), name='pesquisa_form'),  # noqa E501
     path('<int:pk>/', v.PesquisaDetailView.as_view(), name='pesquisa_detail'), # noqa E501
     path('', v.PesquisaListView.as_view(), name='pesquisa_list'), # noqa E501
+
+
 ]
 
 urlpatterns = [
@@ -32,9 +35,10 @@ urlpatterns = [
     path('imovel/', include(imovel_urlpatterns)),
     path('proprietario/', include(proprietario_urlpatterns)),
     path('home/', v.home, name='home'),
+    #path('<int:pk>/', v.pesquisa_imovel, name='busca'),  # noqa E501
     #path('retorno/', v.TesteRetorno, name='retorno'),
     #path('avaliacao', v.filtraCondominio, name='avaliacao'),
-    path('referenciais/', v.referenciais, name='referenciais'),
+    #path('referenciais/', v.referenciais, name='referenciais'),
     path('vida_util/', v.vida_util, name='util'),
     path('tabela/ross/', v.ross, name='ross'),
     path('estadoConservacao/', v.estadoConserv, name='estadoConservacao'),

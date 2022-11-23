@@ -3,8 +3,6 @@ from portal.services import add_permissions
 from portal.models import Proprietario
 
 
-
-
 def proprietario_avaliador_create(form, user):
     # Define username igual email.
     email = form.cleaned_data.pop('email')
@@ -18,6 +16,7 @@ def proprietario_avaliador_create(form, user):
     user.username = email
 
     user.save()
+
 
     # Adiciona ao grupo 'proprietario_avaliador'.
     group = Group.objects.get(name='proprietario_avaliador')
@@ -42,13 +41,13 @@ def proprietario_avaliador_create(form, user):
 
         )
 
-    # Adiciona ao grupo.
+       # Adiciona ao grupo.
     if corretor:
         group = Group.objects.get(name='corretor')
     elif imobiliaria:
         group = Group.objects.get(name='imobiliaria')
     elif dono:
-        group = Group.objects.get(name='dono')
+        group = Group.objects.get(name='proprietario')
     user.groups.add(group)
 
     add_permissions('proprietario_avaliador', ['add_imovel'])

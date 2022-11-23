@@ -1,0 +1,275 @@
+<form action="." method="POST" class="form-group">
+                {% csrf_token %}
+                {% for error in field.errors %}
+                      <span class="text-dark">{{ error }}</span>
+                {% endfor %}
+                 <div class="form-group">
+                        <table class="table-responsive-sm">
+                            <tr class="inline-group">
+                                <th>
+                                   <label for="form-quadro">Data :</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.dtacadastro }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th colspan="3">
+                                   <label for="form-quadro">Consultor :</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.consultor }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                            </tr>
+                        </table>
+                 </div>
+
+
+                <div class="container-fluid"><h5 class="font_topicos">LOCALIZAÇÃO:</h5>
+                    <div id="form-quadro" class="form-group">
+                        <table class="table-responsive-sm">
+                            <tr class="inline-group">
+                                <th>
+                                   <label for="form-quadro">Logradouro:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.logradouro }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Complemento:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.complemento }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Nº:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.numero }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">S/N:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.sem_numero }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                            </tr>
+                            <tr class="inline-group">
+                                <th>
+                                   <label for="form-quadro">Condomínio:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.nomecondominio  }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Bairro:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.bairro  }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Cidade:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.cidade  }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">UF:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.estado  }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="container-fluid"><h5 class="font_topicos">CARACTERÍSTICAS PRECIFICAÇÃO:</h5>
+                    <div id="form-quadro" class="form-group">
+                        <table class="table-responsive-sm">
+                            <tr class="inline-group">
+                                <th>
+                                   <label for="form-quadro">Uso:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.uso }}
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Idade:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.idade  }}
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Tipo:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.tipo }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Padrão:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.padrao }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                            </tr>
+                            <tr class="inline-group">
+                                <th>
+                                   <label for="form-quadro">Conservação:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.estadoconser  }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                 <th>
+                                   <label for="form-quadro">AT:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.atotal }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">AC:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.aconstruida }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Estatus:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.status }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+            </div>
+            <div class="container-fluid"><h5 class="font_topicos">CARACTERÍSTICA INTERNA:</h5>
+                    <div id="form-quadro" class="form-group">
+                        <table class="table-responsive-sm">
+                            <tr class="inline-group">
+                                <th>
+                                   <label for="form-quadro">NºDorm.:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.numero_dormitorios }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Nº Suítes:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.suites }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Nº Banheiros:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.numero_banheiros }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                 <th>
+                                   <label for="form-quadro">Nº Salas:</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.numero_salas }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                            </tr>
+                            <tr class="inline-group">
+
+                                <td class="form-group" style="text-align: right">
+                                   {{ form.pe_direito_alto }}
+                                   <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Pé direito alto</label>
+                                </th>
+                                <td class="form-group" style="text-align: right">
+                                   {{ form.lavabo }}
+                                   <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Lavabo</label>
+                                </th>
+
+                                <td class="form-group" style="text-align: right">
+                                   {{ form.quarto_empreg }}
+                                   <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Quarto Empregada</label>
+                                </th>
+
+                                <td class="form-group" style="text-align: right">
+                                   {{ form.banheiro_empre  }}
+                                    <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Banheiro Empregada</label>
+                                </th>
+                                 <td class="form-group" style="text-align: right">
+                                   {{ form.aquec_solar }}
+                                     <span class="text-dark">{{ error }}</span>
+                                </td>
+                                <th>
+                                   <label for="form-group">Aquecedor Solar</label>
+                                </th>
+                        </table>
+                    </div>
+            </div>
+            <div class="container-fluid"><h5 class="font_topicos">LAZER PRIVATIVO:</h5>
+                    <div id="form-quadro" class="form-group">
+                        <table class="table-responsive-sm">
+                            <tr class="inline-group">
+
+                                <td class="form-group" >
+                                   {{ form.churrasqueira }}
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Churrasqueira</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.piscina  }}
+                                </td>
+                                 <th>
+                                   <label for="form-quadro">Piscina</label>
+                                </th>
+                                <td class="form-group">
+                                   {{ form.pisc_aquec }}
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Piscina Aquec</label>
+                                </th>
+
+                                <td class="form-group">
+                                   {{ form.vestiario }}
+                                </td>
+                                <th>
+                                   <label for="form-quadro">Vestiário</label>
+                                </th>
+
+                            </tr>
+
+                        </table>
+                    </div>
+            </div>
+                <div class="float-right form-group">
+                    <button class="btn btn-primary" type="submit">Salvar</button>
+                </div>
+
+            </form>
+        </div>

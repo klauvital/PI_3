@@ -68,43 +68,48 @@ class PesquisaListView(LRM, ListView):
 
         return context
 
+def pesquisa_imovel(request, pk):
+    pesquisa = get_object_or_404(Pesquisa, pk=pk)
 
-def pesquisa_imovel(self):
 
-    data = self.request.GET.get('data')
-    uso = self.request.GET.get('uso')
-    idade = self.request.GET.get('idade')
-    conservacao = self.request.GET.get('estadoconser')
-    padrao = self.request.GET.get('padrao')
-    tipo = self.request.GET.get('tipo')
-    aconstruida = self.request.GET.get('aconstruida')
-    atotal = self.request.GET.get('atotal')
-    condominio = self.request.GET.get('nomecondominio')
-    bairro = self.request.GET.get('bairro')
-    cidade = self.request.GET.get('cidade')
-    estado = self.request.GET.get('estado')
+    if pesquisa:
+        uso = pesquisa.uso
+        idade = pesquisa.idade
+        conservacao = pesquisa.estadoconser
+        padrao = pesquisa.padrao
+        tipo = pesquisa.tipo
+        aconstruida = pesquisa.aconstruida
+        atotal = pesquisa.atotal
+        condominio = pesquisa.nomecondominio
+        bairro = pesquisa.bairro
+        cidade = pesquisa.cidade
+        estado = pesquisa.estado
 
-    busca = Q(
-        Q(uso=uso) & Q(nomecondominio__nome=condominio)
-        | Q(bairro=bairro) & Q(padrao__nome=padrao) & Q(tipo__nome=tipo)
-       )
+        busca = Q(
+            Q(nomecondominio__nome=condominio)
+            | Q(bairro=bairro)
+            & Q(padrao__nome=padrao)
+            & Q(tipo__nome=tipo)
+        )
+        referenciais = Imovel.objects.filter(busca)
 
-    dados = (data, uso, idade, conservacao, padrao, tipo, aconstruida, atotal, bairro, cidade, estado)
-    Listimovel = Imovel.objects.filter(busca)
+        if referenciais.count() != 0:
+            context = {
+                'dados': pesquisa,
+                'referenciais': referenciais,
+            }
 
-    if Listimovel.count() != 0:
+        else:
+            frase = "Não existe referenciais para os dados acima"
 
-        context = {
-            'filtroCond': Listimovel,
-            'dados': dados
-
-        }
+            context = {
+                'dados': pesquisa,
+                'frase': frase,
+                'referenciais': referenciais,
+            }
         return render(request, 'portal/retorno_pesquisa.html', context=context)
 
-    else:
-        msg = 'Não foi encontrado na base de dados !'
-        messages.add_message(request, constants.ERROR, msg)
-        return render(request, 'portal/pesquisa_form.html')
+
 
 
 def referenciais(request):

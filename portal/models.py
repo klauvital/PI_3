@@ -140,30 +140,31 @@ uso_choices = (
     )
 class Imovel(models.Model):
     dtacadastro = models.DateField(db_column='dtaCadastro', blank=True, null=True, verbose_name='Data de cadastro')
-    uso = models.CharField('Estado Civil', max_length=1, choices=uso_choices, blank=True, null=True)  # noqa E501
+    uso = models.CharField('Uso', max_length=1, choices=uso_choices, blank=True, null=True)  # noqa E501
     tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE, blank=True)
     idade = models.IntegerField(blank=True)
-      # Field name made lowercase.
     nomecondominio = models.ForeignKey(Nomecondominio, on_delete=models.CASCADE,  blank=True, null=True, verbose_name='Condominio')
     logradouro = models.CharField(db_column='Logradouro', max_length=200,  blank=True, null=True)
     complemento = models.CharField(db_column='Complemento', max_length=200,  blank=True, null=True)
     numero = models.CharField(db_column='Número', max_length=20, blank=True, null=True)
-    sem_numero = models.BooleanField('S/N', default=False, blank=True, null=True)
-    bairro = models.CharField(max_length=100, default='----')
+    sem_numero = models.BooleanField('Sem número', default=False, blank=True, null=True)
+    bairro = models.CharField(max_length=100,  default='----')
     cidade = models.CharField(max_length=200, default='Ribeirão Preto')
     estado = models.CharField(max_length=2, default='SP')
     numero_dormitorios = models.IntegerField(db_column='Nº dormitórios', default=0)
-    numero_banheiros = models.IntegerField(db_column='Nº total banheiros',default='0' )
+    suites = models.IntegerField(db_column='Nº suítes', default=0)
+    numero_banheiros = models.IntegerField(db_column='Nº banheiros', default=0)
     lavabo = models.BooleanField('Lavabo', default=False, blank=True, null=True)
     aquec_solar = models.BooleanField('Aquecimento Solar', default=False, blank=True, null=True)
-    suites = models.IntegerField(db_column='Nº Suítes', default=0)
+    pe_direito_alto = models.BooleanField('Pé Direito Alto', default=False, blank=True, null=True)
+    numero_salas = models.IntegerField(db_column='Nº salas', default=0, null=True, blank=True)
+    piscina = models.BooleanField('Piscina', default=False, blank=True, null=True)
     churrasqueira = models.BooleanField('Churrasqueira', default=False, blank=True, null=True)
     quarto_empreg = models.BooleanField('Quarto empregada', default=False, blank=True, null=True)
     banheiro_empre = models.BooleanField('Banheiro empregada', default=False, blank=True, null=True)
     vestiario = models.BooleanField('Vestiário', default=False, blank=True, null=True)
-    piscina = models.BooleanField('Piscina', default=False, blank=True, null=True)
     pisc_aquec = models.BooleanField('Piscina aquecida', default=False, blank=True, null=True)
-    aconstruida = models.DecimalField(blank=False, null=False, default=0, max_digits=10, decimal_places=2,  verbose_name='Área Construída/Útil')
+    aconstruida = models.DecimalField(blank=False, null=False, default=0, max_digits=10, decimal_places=2, verbose_name='Área Construída/Útil')
     atotal = models.DecimalField(blank=False, null=False, default=0, max_digits=10, decimal_places=2, verbose_name='Área Total')
     status = models.CharField(max_length=1, choices=status_choices)
     padrao = models.ForeignKey(Padrao, on_delete=models.CASCADE, blank=True)
@@ -171,7 +172,7 @@ class Imovel(models.Model):
     vidautil = models.ForeignKey(Vidautil, on_delete=models.CASCADE, blank=True,  verbose_name='Vida Útil')  # Field name made lowercase.
     valordevenda = models.DecimalField(db_column='Valor Pretendido', max_digits=10, decimal_places=2, blank=False,
                                   null=False, default=0, verbose_name='Valor de venda')
-    consultor = models.ForeignKey(Proprietario, on_delete=models.CASCADE, blank=True, null=True, related_name ='Consultor')
+    consultor = models.ForeignKey(Proprietario, on_delete=models.CASCADE, blank=True, null=True, related_name='Consultor')
 
     class Meta:
         ordering = ['-dtacadastro']
@@ -236,7 +237,7 @@ class Avaliacao(models.Model):
 
 
 class Pesquisa(models.Model):
-    data_pesquisa = models.DateField(db_column='data', blank=True, null=True, verbose_name='Data Pesquisa') # noqa E501
+    data = models.DateField(db_column='data', blank=True, null=True, verbose_name='Data Pesquisa') # noqa E501
     uso = models.CharField('Uso', max_length=1, choices=uso_choices, blank=True, null=True)  # noqa E501
     idade = models.IntegerField(blank=True)  # noqa E501
     estadoconser = models.ForeignKey(Estadoconser, on_delete=models.CASCADE, blank=True,
@@ -254,7 +255,7 @@ class Pesquisa(models.Model):
 
 
     class Meta:
-        ordering = ['-data_pesquisa']
+        ordering = ['-data']
 
     def __str__(self):
         return "{} - {} - {} - {} ".format(self.tipo.nome, self.nomecondominio.nome, self.estadoconser.nome, self.user_consultor)
