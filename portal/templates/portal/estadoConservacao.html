@@ -12,40 +12,32 @@
 
       </div>
     </div>
-         <div class="container-fluid">
-              <div class="card-body col-8 offset-2">
-             <table
-                  class="table table-striped"
-             >
+        <div class="container-sm">
+            <div class="table-responsive-sm">
+                <table class = "table table-hover" >
+                    <thead>
+                        <tr class="bg-gradient-primary">
+                              <th>ID</th>
+                              <th>Nome</th>
+                              <th>Código</th>
 
-                  <thead>
-                      <tr>
-                          <th>ID</th>
-                          <th>Nome</th>
-                          <th>Código</th>
-                            {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
-                                <th>Ações</th>
-                            {% endif %}
-                      </tr>
-                  </thead>
-                  <tbody>
+                        </tr>
+                    </thead>
+                    <tbody>
                      {%  for estadoConser in estadoCons %}
-                     <tr>
-                         <td>{{ estadoConser.id  }} </td>
-                         <td>{{ estadoConser.nome }}</td>
-                         <td>{{ estadoConser.codigo }}</td>
+                         <tr>
+                             <td>{{ estadoConser.id  }} </td>
+                             <td><a href="{{ object.get_absolute_url }}">{{ estadoConser.nome }}</a></td>
+                             <td>{{ estadoConser.codigo }}</td>
 
-                         {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
-                             <td><button class='btn btn-warning'>Editar</button>
-                             </td>
-                         {% endif %}
 
-                     </tr>
+
+                         </tr>
                      {% endfor %}
-                  </tbody>
-             </table>
+                     </tbody>
+                </table>
 
-         </div>
-      </div>
+            </div>
+        </div>
 </div>
 {% endblock %}

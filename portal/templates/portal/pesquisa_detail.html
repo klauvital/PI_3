@@ -52,11 +52,6 @@
                <td>{{object.nomecondominio.nome|default:"---"}}</td>
            </tr>
            <tr>
-               <td>Padrão</td>
-               <td>{{object.padrao.nome|default:"---"}}</td>
-           </tr>
-
-           <tr>
                <td>Bairro</td>
                <td>{{object.bairro|default:"---"}}</td>
            </tr>
@@ -66,12 +61,21 @@
            </tr>
            <tr>
                <td>Estado</td>
-               <td>{{object.get_estado_display|default:"---"}}</td>
+               <td>{{object.estado|default:"---"}}</td>
+           </tr>
+            <tr>
+               <td>Valor Avaliado</td>
+               <td>{{object.valor_avaliacao|default:"---"}}</td>
            </tr>
            <tr>
                <td>Consultor</td>
                <td>{{object.user_consultor|default:"---"}}</td>
            </tr>
+          <tr>
+             <td>
+                <a class ="btn btn-warning btn-sm" href="{% url 'pesquisa_edit' object.pk %}"> Editar</a>
+             </td>
+          </tr>
 
           </tbody>
         </table>

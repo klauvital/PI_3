@@ -12,7 +12,6 @@ from .forms import ProprietarioAvaliadorForm
 
 
 def proprietario_avaliador_add(request):
-
     template_name = 'accounts/proprietario_avaliador_add.html'
     form = ProprietarioAvaliadorForm(request.POST or None)
     success_url = reverse_lazy('login')
@@ -51,11 +50,10 @@ def custom_login(request):
             # return redirect(resolve_url(settings.LOGIN_REDIRECT_URL))
             user = user_auth
             return redirect(resolve_url('home'))
-
-
-        # Caso não esteja autenticado.
-        messages.add_message(request, constants.ERROR, 'Usuário ou senha não conferem !')  # noqa E501
-        return redirect(resolve_url(settings.LOGIN_REDIRECT_URL))
+        else:
+            # Caso não esteja autenticado.
+            messages.add_message(request, constants.ERROR, 'Usuário ou senha não conferem !')  # noqa E501
+            return redirect('login')
 
 
     return render(request, template_name, context)

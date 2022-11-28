@@ -6,59 +6,56 @@
 
 
 {% block content %}
-
-  <div class="card shadow mb-4">
+<div class="card shadow mb-4">
     <div class="card-header py-3">
       <div class="d-sm-flex align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Imóveis</h6>
-        <a href="{% url 'imovel_add' %}" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-          class="fas fa-plus fa-sm text-white-50"></i> Adicionar</a>
-        <!--<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-          class="fas fa-download fa-sm text-white-50"></i> PDF</a>-->
+         <h6 class="m-0 font-weight-bold text-primary">Lista de Imóveis</h6>
       </div>
     </div>
-     <div class="card-body col-12 offset-lg-0">
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover"
+                id="" >
+            <!--    data-order="0" -->
 
-        <table
-          class="table table-striped"
-        >
-          <thead>
-            <tr>
-              {% for label in labels %}
-                <th>{{ label }}</th>
-              {% endfor %}
-                <th style="min-width:10rem">Acões</th>
+                <thead>
+                    <tr class="bg-gradient-primary">
+                      {% for label in labels %}
+                        <th >{{ label }}</th>
+                      {% endfor %}
+                       <th style="min-width:10rem">Acões</th>
+                    </tr>
+                  </thead>
+                    <tbody>
+                        {% for object in object_list %}
+                            <tr>
+                                <td> {{ object.dtacadastro|date:"d/m/Y" }} </td>
+                                <td> {{ object.tipo.nome }} </td>
+                                <td> {{ object.nomecondominio.nome }} </td>
+                                <td> {{ object.bairro }} </td>
+                                <td> {{ object.cidade }} </td>
+                                <td> {{ object.aconstruida }} </td>
+                                <td> {{ object.get_status_display }} </td>
+                                <td> {{ object.padrao.nome }} </td>
+                                <td> {{ object.estadoconser.nome }} </td>
+                                <td> {{ object.idade }} </td>
+                                <td> <a href="{{ object.get_absolute_url }}">{{ object.valordevenda }}</a></td>
 
-            </tr>
-          </thead>
-          <tbody>
-            {%  for object in object_list %}
-                <tr>
-                    <td> {{ object.dtacadastro|date:"d/m/Y" }} </td>
-                    <td> {{ object.tipo.nome }} </td>
-                    <td> {{ object.nomecondominio.nome }} </td>
-                    <td> {{ object.bairro }} </td>
-                    <td> {{ object.cidade }} </td>
-                    <td> {{ object.aconstruida }} </td>
-                    <td> {{ object.get_status_display }} </td>
-                    <td> {{ object.padrao.nome }} </td>
-                    <td> {{ object.estadoconser.nome }} </td>
-                    <td> {{ object.idade }} </td>
-                    <td> <a href="{{ object.get_absolute_url }}">{{ object.valordevenda }}</a></td>
+                                    {% if object.consultor.email == user.email %}
+                                        <td>
+                                            <a class ="btn btn-warning btn-sm" href="{% url 'imovel_edit' object.pk %}">Editar</a>
+                                             <a class ="btn btn-danger btn-sm" href="{% url 'imovel_delete' object.pk %}" onclick="return confirm ('Deseja excluir o registro : {{ object.pk }} ?  ')">Excluir</a>
+                                        </td>
+                                    {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-                        {% if object.consultor.email == user.email %}
-                            <td>
-                                <a class ="btn btn-warning btn-sm" href="{% url 'imovel_edit' object.pk %}">Editar</a>
-                                 <a class ="btn btn-danger btn-sm" href="{% url 'imovel_delete' object.pk %}" onclick="return confirm ('Deseja excluir o registro : {{ object.pk }} ?  ')">Excluir</a>
-                            </td>
-                        {% endif %}
-                </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+        </div>
+</div>
 
-    </div>
-  </div>
 
 {% endblock content %}
 

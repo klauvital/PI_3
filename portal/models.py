@@ -107,7 +107,7 @@ class Proprietario(models.Model):
         return "{} - {} - {} - {} ".format(self.nome, self.cpf, self.email, self.dono)
 
     def get_absolute_url(self):
-        return reverse("proprietario_edit", kwargs={"pk": self.id})
+        return reverse("proprietario_detail", kwargs={"pk": self.id})
 
     @property
     def list_url(self):
@@ -126,6 +126,8 @@ class Proprietario(models.Model):
             kw = {'pk': self.pk}
             return reverse_lazy('#', kwargs=kw)
         return None
+
+
 
 
 status_choices = (
@@ -190,6 +192,7 @@ class Imovel(models.Model):
             metro_quadrado = ((self.valordevenda) / (self.aconstruida))
             return round(float(metro_quadrado),2)
 
+
     def get_absolute_url(self):
         return reverse("imovel_detail", kwargs={"pk": self.id})
 
@@ -240,6 +243,7 @@ class Pesquisa(models.Model):
     data = models.DateField(db_column='data', blank=True, null=True, verbose_name='Data Pesquisa') # noqa E501
     uso = models.CharField('Uso', max_length=1, choices=uso_choices, blank=True, null=True)  # noqa E501
     idade = models.IntegerField(blank=True)  # noqa E501
+    status = models.CharField(max_length=1, choices=status_choices, default=1)
     estadoconser = models.ForeignKey(Estadoconser, on_delete=models.CASCADE, blank=True,
                                      verbose_name='Estado de Conservação')  # noqa E501
     padrao = models.ForeignKey(Padrao, on_delete=models.CASCADE, blank=True) # noqa E501
@@ -252,7 +256,7 @@ class Pesquisa(models.Model):
     cidade = models.CharField(max_length=200, default='Ribeirão Preto')
     estado = models.CharField(max_length=2, default='SP')
     user_consultor = models.ForeignKey(Proprietario, on_delete=models.CASCADE, blank=True, null=True, related_name='User_Consultor')
-
+    valor_avaliacao = models.DecimalField('Valor Avaliação',default=0,blank=True, null=True, max_digits=10, decimal_places=2)
 
     class Meta:
         ordering = ['-data']
@@ -266,3 +270,10 @@ class Pesquisa(models.Model):
     @property
     def list_url(self):
         return reverse_lazy('pesquisa_list')
+
+    @property
+    def update_url(self):
+        if self.pk:
+            kw = {'pk': self.pk}
+            return reverse_lazy('pesquisa_edit', kwargs=kw)
+        return None

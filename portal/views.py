@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin as LRM
@@ -28,7 +30,6 @@ class PesquisaCreateView(LRM, CreateView):
     model = Pesquisa
     form_class = PesquisaForm
 
-
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update({'user': self.request.user.username})
@@ -52,6 +53,7 @@ class PesquisaListView(LRM, ListView):
         context['labels'] = (
             'Data',
             'Uso',
+            'Status',
             'Idade',
             'Conservação',
             'Padrão',
@@ -71,14 +73,13 @@ class PesquisaListView(LRM, ListView):
 def pesquisa_imovel(request, pk):
     pesquisa = get_object_or_404(Pesquisa, pk=pk)
 
-
     if pesquisa:
         uso = pesquisa.uso
-        idade = pesquisa.idade
+        idade = int(pesquisa.idade)
         conservacao = pesquisa.estadoconser
         padrao = pesquisa.padrao
         tipo = pesquisa.tipo
-        aconstruida = pesquisa.aconstruida
+        aC = float(pesquisa.aconstruida)
         atotal = pesquisa.atotal
         condominio = pesquisa.nomecondominio
         bairro = pesquisa.bairro
@@ -91,13 +92,116 @@ def pesquisa_imovel(request, pk):
             & Q(padrao__nome=padrao)
             & Q(tipo__nome=tipo)
         )
+
         referenciais = Imovel.objects.filter(busca)
 
         if referenciais.count() != 0:
+            # Alterando para fazer a avaliação
+            metro_quadr = float(0)
+            cont = 0
+            media_m2 = float(0)
+            gordura = 0
+            valorAvaliacao = 0
+            vidautil = 0
+            valor_tabela = 0
+            desconto_oferta = float(0)
+            metro_quadrado_inicial = float(0)
+            metro_quadrado_final = float(0)
+            idade_em_perc = 0
+            frase = ''
+            inversao = False
+            lista = []
+            for i in referenciais:
+                dicionario = {}
+                metro_quadr = float(0)
+                metro_quadr = i.metroquadrado()
+
+                if i.status == '1':
+                    desconto_oferta = round((metro_quadr * 0.05), 2)
+                    metro_quadr = metro_quadr - desconto_oferta
+
+                if idade == i.idade:
+                    cont += 1
+                    media_m2 += metro_quadr / cont
+                else:
+                    ec = i.estadoconser.codigo
+                    vidautil = (idade - i.idade)
+                    vidautil = round(vidautil * 100 / i.vidautil.idadevidautil)
+                    idade_em_perc = vidautil
+
+                    if vidautil < 0:
+                        vidautil = vidautil * -1
+                        inversao = True
+
+                    if vidautil == 0:
+                        vidautil = vidautil + 2
+
+                    if vidautil % 2 != 0:
+                        vidautil = vidautil + 1
+
+                    lst = [field.name for field in Tabelarossheideck._meta.get_fields()]
+
+                    # ec vem da lista de colunas da Tabelarossheideck
+
+                    # Dicionário vazio
+                    lorem = {}
+
+                    # Transforma o objeto Tabelarossheideck numa lista de dicionários.
+                    objeto_rossheideck = Tabelarossheideck.objects.filter(idade_em_vida=vidautil).values()
+                    primeiro_registro = objeto_rossheideck[0]
+
+                    # valor da coluna correspondente
+                    # primeiro_registro[ec] é como se fosse um dicionário
+                    # com chave e valor, mas no lugar da chave
+                    # usamos uma variável, porque a letra vem de ec.
+                    valor_da_coluna = primeiro_registro[ec]
+                    valor_tabela = round(metro_quadr * float(valor_da_coluna) / 100, 2)
+
+                    metro_quadrado_inicial = (i.metroquadrado())
+
+                    if inversao == True:
+                        metro_quadrado_final = (metro_quadrado_inicial - desconto_oferta + valor_tabela)
+
+                    else:
+                        metro_quadrado_final = (metro_quadrado_inicial - valor_tabela - desconto_oferta)
+
+                    cont += 1
+                    media_m2 = media_m2 + metro_quadrado_final
+                    dicionario['id'] = i.id
+                    dicionario['tipo'] = i.tipo.nome
+                    dicionario['padrao'] = i.padrao.nome
+                    dicionario['condominio'] = i.nomecondominio.nome
+                    dicionario['bairro'] = i.bairro
+                    dicionario['ac'] = i.aconstruida
+                    dicionario['ec'] = i.estadoconser.nome
+                    dicionario['idade'] = i.idade
+                    dicionario['estatus'] = i.status
+                    dicionario['valor'] = i.valordevenda
+                    dicionario['metro_quadrado'] = i.metroquadrado()
+                    dicionario['metro_quadrado_final'] = round(metro_quadrado_final, 2)
+                    dicionario['desconto_oferta'] = desconto_oferta
+                    dicionario['valor_da_coluna'] = valor_da_coluna
+                    dicionario['idade_em_perc'] = idade_em_perc
+                    dicionario['valor_tabela'] = valor_tabela
+                    lista.append(dicionario)
+
+            media_m2 = media_m2 / cont
+            valorAvaliacao = media_m2 * float(aC)
+            pesquisa.valor_avaliacao = valorAvaliacao
+            pesquisa.save()
+            media_m2 = "R$ {:,.2f}".format(media_m2).replace(",", "X").replace(".", ",").replace("X", ".")
+            valorAvaliacao = "R$ {:,.2f}".format(valorAvaliacao).replace(",", "X").replace(".", ",").replace(
+                "X", ".")
+
             context = {
-                'dados': pesquisa,
+                'lista': lista,
                 'referenciais': referenciais,
+                'dados': pesquisa,
+                'valor': valorAvaliacao,
+                'media_metro2': media_m2,
+                'area_construida': aC,
             }
+            return render(request, 'portal/retorno_pesquisa.html', context=context)
 
         else:
             frase = "Não existe referenciais para os dados acima"
@@ -107,9 +211,47 @@ def pesquisa_imovel(request, pk):
                 'frase': frase,
                 'referenciais': referenciais,
             }
-        return render(request, 'portal/retorno_pesquisa.html', context=context)
+            return render(request, 'portal/retorno_pesquisa.html', context=context)
 
 
+def duplicar_create(pesquisa, pk):
+    pesquisa = get_object_or_404(Pesquisa, pk=pk)
+    conservacao =pesquisa.estadoconser.id
+    condominio = pesquisa.nomecondominio.id
+    padrao = pesquisa.padrao.id
+    tipo = pesquisa.padrao.id
+    consultor = pesquisa.user_consultor.id
+
+    if pesquisa:
+        Pesquisa.objects.create(
+        data = datetime.date.today(),
+        uso=pesquisa.uso,
+        idade=pesquisa.idade,
+        aconstruida=pesquisa.aconstruida,
+        atotal=pesquisa.atotal,
+        bairro=pesquisa.bairro,
+        cidade=pesquisa.cidade,
+        estado=pesquisa.estado,
+        estadoconser_id=conservacao,
+        nomecondominio_id=condominio,
+        padrao_id=padrao,
+        tipo_id=tipo,
+        user_consultor_id=consultor,
+        status=pesquisa.status,
+        valor_avaliacao=0.00,
+    )
+    pesquisa.save()
+    return redirect('pesquisa_list')
+
+
+class PesquisaUpdateView(LRM, UpdateView):
+    model = Pesquisa
+    form_class = PesquisaForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
 
 def referenciais(request):
@@ -275,33 +417,6 @@ class ImovelListView(LRM, ListView):
 
     def get_queryset(self):
         user = self.request.user.username
-        queryset = Imovel.objects.filter(consultor__email=user)  # noqa E501
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['labels'] = (
-            'Data',
-            'Tipo',
-            'Condomínio',
-            'Bairro',
-            'Cidade',
-            'AC',
-            'Estátus',
-            'Padrão',
-            'EC',
-            'Idade',
-            'Valor',
-
-
-        )
-        return context
-
-class ImovelTodosListView(LRM, ListView):
-    model = Imovel
-
-    def get_queryset(self):
-        user = self.request.user.username
         queryset = Imovel.objects.all()  # noqa E501
         return queryset
 
@@ -319,10 +434,38 @@ class ImovelTodosListView(LRM, ListView):
             'EC',
             'Idade',
             'Valor',
-
-
         )
         return context
+
+
+
+class ImovelMeusListView(LRM, ListView):
+    model = Imovel
+
+
+    def get_queryset(self):
+        user = self.request.user.username
+        queryset = Imovel.objects.filter(consultor__email=user)  # noqa E501
+        return queryset
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['labels'] = (
+            'Data',
+            'Tipo',
+            'Condomínio',
+            'Bairro',
+            'Cidade',
+            'AC',
+            'Estátus',
+            'Padrão',
+            'EC',
+            'Idade',
+            'Valor',
+        )
+        return context
+
 
 
 class ImovelDetailView(LRM, DetailView):
@@ -390,6 +533,7 @@ def padrao(request):
         'padrao': padrao
     }
     return render(request, 'portal/padrao.html', context)
+
 
 
 def padrao_add(request):
@@ -504,10 +648,6 @@ class ProprietarioCreateView(LRM, CreateView):
         return kwargs
 
 
-class ProprietarioDetailView(LRM, DetailView):
-    model = Proprietario
-
-
 class ProprietarioUpdateView(LRM, UpdateView):
     model = Proprietario
     form_class = ProprietarioForm
@@ -516,6 +656,14 @@ class ProprietarioUpdateView(LRM, UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs.update({'user': self.request.user})
         return kwargs
+
+class ProprietarioListView(LRM, ListView):
+    model = Imovel
+
+    def get_queryset(self):
+        user = self.request.user.username
+        queryset = Imovel.objects.filter(consultor__email=user)  # noqa E501
+        return queryset
 
 
 def proprietario_delete(request, proprietario_pk):

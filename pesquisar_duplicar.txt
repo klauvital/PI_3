@@ -1,0 +1,35 @@
+ Pesquisa.objects.create(
+            data=datetime.date.today(),
+            uso=pesquisa.uso,
+            idade=pesquisa.idade,
+            aconstruida=pesquisa.aconstruida,
+            atotal=pesquisa.atotal,
+            bairro=pesquisa.bairro,
+            cidade=pesquisa.cidade,
+            estado=pesquisa.estado,
+            estadoconser_id=pesquisa.estadoconser,
+            nomecondominio=pesquisa.condominio,
+            padrao_id=pesquisa.padrao,
+            tipo_id=pesquisa.tipo,
+            user_consultor=pesquisa.user_consultor,
+            status=pesquisa.status,
+            valor_avaliacao= 0.00,
+            )
+     pesquisa.save()
+
+
+ data = pesquisa.data('data')
+        uso = pesquisa.uso('uso')
+        idade = form.cleaned_data.pop('idade')
+        estadoconser = form.cleaned_data.pop('estadoconser')
+        padrao = form.cleaned_data.pop('padrao')
+        tipo = form.cleaned_data.pop('tipo')
+        aconstruida = form.cleaned_data.pop('aconstruida')
+        atotal = form.cleaned_data.pop('atotal')
+        nomecondominio = form.cleaned_data.pop('nomecondominio')
+        bairro = form.cleaned_data.pop('bairro')
+        cidade = form.cleaned_data.pop('cidade')
+        estado = form.cleaned_data.pop('estado')
+        status = form.cleaned_data.pop('status')
+        valor_avaliacao = form.cleaned_data.pop('0.00')
+        user_consultor = form.cleaned_data.pop('user_consultor')

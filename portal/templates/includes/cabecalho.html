@@ -11,12 +11,12 @@
   <h5 style="margin-left: 10px ; margin-top:16px; color:#FFFFFF"> Avalie seu imovel </h5>
 
   <!-- Topbar Search -->
-   <!--<form
+ <!-- <form
     class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-    <div class="input-group">
-      <input type="text" class="form-control bg-light border-0 small" placeholder="Pesquise..."
-        aria-label="Search" aria-describedby="basic-addon2">
-      <div class="input-group-append">
+    <div class="dataTables_filter" id="dataTable_filter">
+        <input type="search" class="form-control form-control"
+        placeholder aria-controls="dataTable">
+     <div class="input-group-append">
         <button class="btn btn-primary" type="button">
           <i class="fas fa-search fa-sm"></i>
         </button>
@@ -184,10 +184,11 @@
           aria-labelledby="userDropdown">
           <!--Configurar para a pagina do usuário} -->
 
-            <a class="dropdown-item" href="#" >
-              <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-600"></i>
-              Perfil
+               <a class="dropdown-item" href="#">
+              <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-600"> Perfil  </i>
             </a>
+
+
 
 
           <!--<a class="dropdown-item" href="#">
@@ -200,8 +201,8 @@
         </a>-->
         <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{{'logout' }}" data-toggle="modal" data-target="#logoutModal">
-            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-600"></i>
-            Sair
+            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-600"> Sair </i>
+
           </a>
         </div>
       </li>

@@ -10,43 +10,31 @@
     <div class="card-header py-3">
       <div class="d-sm-flex align-items-center justify-content-between">
          <h6 class="m-0 font-weight-bold text-primary">Vida Util de Imóveis</h6>
-
       </div>
     </div>
-         <div class="container-fluid">
-              <div class="card-body col-8 offset-2">
-             <table
-                 class="table table-striped"
-             >
+        <div class="container-sm">
+            <div class="table-responsive-sm">
+                <table class = "table table-hover" >
+                    <thead>
+                        <tr class="bg-gradient-primary">
+                             <th>ID</th>
+                             <th>Nome</th>
+                             <th>Idade Util</th>
 
-                 <thead>
-                     <tr>
-                         <th>ID</th>
-                         <th>Nome</th>
-                         <th>Idade Util</th>
-                         {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
-                            <th>Ações</th>
-                         {% endif %}
-                     </tr>
-                 </thead>
-                 <tbody>
-                     {%  for util in lista %}
-                     <tr>
-                         <td>{{ util.id }} </td>
-                         <td>{{ util.nome }}</td>
-                         <td>{{ util.idadevidautil }}</td>
+                         </tr>
+                     </thead>
+                    <tbody>
+                         {%  for util in lista %}
+                         <tr>
+                             <td>{{ util.id }} </td>
+                             <td><a href="{{ object.get_absolute_url }}">{{ util.nome }}</a></td>
+                             <td>{{ util.idadevidautil }}</td>
+                         </tr>
+                         {% endfor %}
+                    </tbody>
+                </table>
 
-                         {% if user.username == 'clauhernandez.sistemas@gmail.com' %}
-                             <td><button class='btn btn-warning'>Editar</button>
-                                 <button class='btn btn-danger'>Excluir</button>
-                             </td>
-                        {% endif %}
-                     </tr>
-                     {% endfor %}
-                 </tbody>
-             </table>
-
-         </div>
-       </div>
+            </div>
+        </div>
 </div>
 {% endblock %}>

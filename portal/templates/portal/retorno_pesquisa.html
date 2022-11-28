@@ -9,58 +9,65 @@
     <div><h5 style="color:black">Dados do imóvel avaliando :</h5>
 
         <div class="font_topicos">
-            <div style="color:black;font-size: 20px">Localização </div> <span style="color:black">- Nome do Condomínio: {{ dados.nomecondominio }}, Bairro: {{ dados.bairro }},Cidade: {{ dados.cidade }},
-               Estado: {{ dados.estado }}</span> </div>
-            <div style="color:black;font-size: 20px">Características </div><span style="color:black"> - Uso: {{ dados.get_uso_display }},
-              Idade: {{ dados.idade }}, Área Construída: {{ dados.aconstruida }}, Tipo : {{ dados.tipo.nome }},
-              Padrão: {{ dados.padrao.nome }}</span>
+            <div style="color:black;font-size: 20px">Localização </div> <span style="color:black">-<b>Nome do Condomínio:</b>  {{ dados.nomecondominio }}, <b>Bairro:</b> {{ dados.bairro }},<b>Cidade: {{ dados.cidade }} </b> ,
+            <b>Estado:</b> {{ dados.estado }}</span> </div>
+            <div style="color:black;font-size: 20px">Características </div><span style="color:black"> - <b> Uso:</b> {{ dados.get_uso_display }},
+              <b>Idade:</b> {{ dados.idade }}, <b>Área Construída:</b> {{ dados.aconstruida }}, <b>Tipo :</b> {{ dados.tipo.nome }},
+              <b>Padrão:</b> {{ dados.padrao.nome }}, <b>Conservação:</b> {{ dados.estadoconser }}</span>
         </div>
+    </div>
+            <div class="table-responsive">
+                <table class = "table table-hover">
+                  <thead>
+                    <tr class="bg-gradient-primary">
+                        <th>ID</th>
+                        <th>Tipo</th>
+                        <th>Padrâo</th>
+                        <th>Condomínio</th>
+                        <th>Bairro</th>
+                        <th>AC</th>
+                        <th>Status</th>
+                        <th>EC</th>
+                        <th>Idade</th>
+                        <th>Dif. Idade em % vida</th>
+                        <th>Valor</th>
+                        <th>M² Inicial</th>
+                        <th> - 5% Oferta</th>
+                        <th>% Tabela</th>
+                        <th>Calculado</th>
+                        <th>M² Final</th>
+                    </tr>
 
+                  </thead>
+                  <tbody>
+                     {% for imovel in lista %}
+                     <tr>
+                         <td>{{ imovel.id }}</td>
+                         <td>{{ imovel.tipo }}</td>
+                         <td>{{ imovel.padrao }} </td>
+                         <td>{{ imovel.condominio }} </td>
+                         <td>{{ imovel.bairro }}</td>
+                         <td>{{ imovel.ac }} </td>
+                         <td>{{ imovel.estatus }} </td>
+                         <td>{{ imovel.ec }} </td>
+                         <td>{{ imovel.idade }} </td>
+                         <td>{{ imovel.idade_em_perc }}</td>
+                         <td>{{ imovel.valor }} </td>
+                         <td>{{ imovel.metro_quadrado }} </td>
+                         <td>{{ imovel.desconto_oferta }}</td>
+                         <td>{{ imovel.valor_da_coluna  }}</td>
+                         <td>{{ imovel.valor_tabela }}</td>
+                         <td>{{ imovel.metro_quadrado_final }}</td>
+
+                     </tr>
+                    {% endfor %}
+
+                  </tbody>
+                </table>
+             <div><h4><b>Média m² = </b> {{ media_metro2 }} <b> x  Área Construída = </b>{{ area_construida  }} =>
+            <b>Valor Avaliado = </b> {{ valor }} </h4></div>
+            </div>
 
 </div>
 
-
-   </div>
-
-
-        <table class = "table table-striped">
-          <thead>
-            <tr>
-                <th>ID</th>
-                <th>Tipo</th>
-                <th>Padrâo</th>
-                <th>Condomínio</th>
-                <th>Bairro</th>
-                <th>Cidade</th>
-                <th>Estado</th>
-                <th>AC</th>
-                <th>Status</th>
-                <th>Idade</th>
-                <th>Valor</th>
-            </tr>
-
-          </thead>
-          <tbody>
-             {% for imovel in referenciais %}
-             <tr>
-                 <td><a href="{{ object.get_absolute_url }}">{{ imovel.id }}</a></td>
-                 <td>{{ imovel.tipo.nome }}</td>
-                 <td>{{ imovel.padrao.nome }} </td>
-                 <td>{{ imovel.nomecondominio.nome }} </td>
-                 <td>{{ imovel.bairro }}</td>
-                 <td>{{ imovel.cidade }}</td>
-                 <td>{{ imovel.estado }}</td>
-                 <td>{{ imovel.aconstruida }} </td>
-                 <td>{{ imovel.get_status_display }} </td>
-                 <td>{{ imovel.idade }} </td>
-                 <td>{{ imovel.valordevenda }} </td>
-
-          </tr>
-            {% endfor %}
-
-          </tbody>
-        </table>
-
-</div>
-</div>
 {% endblock %}

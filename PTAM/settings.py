@@ -13,6 +13,8 @@ import os
 from pathlib import Path
 from django.contrib.messages import constants
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -117,7 +119,7 @@ LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'America/Sao_Paulo'
 
-USE_I18N = False
+USE_I18N = True
 
 USE_L10N = True
 
@@ -134,6 +136,9 @@ STATICFILES_DIRS = (os.path.join('static'), )
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = ''
 
 # Django message
 MESSAGE_TAGS = {

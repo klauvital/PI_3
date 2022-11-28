@@ -57,4 +57,3 @@ def proprietario_avaliador_create(form, user):
 
 
 
-

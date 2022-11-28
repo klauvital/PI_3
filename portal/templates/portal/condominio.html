@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card shadow mb-4">
+  <div class="card shadow mb-4">
     <div class="card-header py-3">
       <div class="d-sm-flex align-items-center justify-content-between">
          <h6 class="m-0 font-weight-bold text-primary">Lista de Condomínios</h6>
@@ -14,36 +14,36 @@
           class="fas fa-download fa-sm text-white-50"></i> PDF</a>-->
       </div>
     </div>
-         <div class="card-body col-9 offset-xl-2">
-             <table
-                  class="table table-striped"
-             >
+         <div class="table-container">
+            <div class="table-responsive">
+                <table class="table table-hover"
+                id="dataTable"
+                data-order= 0>
                   <thead>
-                    <tr>
-                    <th>ID</th>
-                    <th style="min-width:15rem">Nome</th>
-                    <th style="min-width:25rem">Logradouro</th>
-                    <th style="min-width:15rem">Cidade</th>
-                    <th>UF</th>
-                    {% if user.get_full_name == 'clauhernandez.sistemas@gmail.com' %}
-                        <th>Ações</th>
-                    {% endif %}
-                </tr>
+                    <tr class="bg-gradient-primary">
+                        <th>ID</th>
+                        <th style="min-width:15rem">Nome Condomínio</th>
+                        <th style="min-width:25rem">Logradouro</th>
+                        <th style="min-width:15rem">Cidade</th>
+                        <th>UF</th>
+
+                    </tr>
                   </thead>
                       <tbody>
                           {%  for condominio in condominio %}
-                              <tr>
-                             <td>{{ condominio.id}}</td>
-                             <td>{{ condominio.nome }}</td>
-                             <td>{{ condominio.endereco }}</td>
-                             <td>{{ condominio.cidade }}</td>
-                             <td>{{ condominio.uf }}</td>
+                             <tr>
+                                 <td data-label="ID"><b>{{ condominio.id}}</b></td>
+                                 <td data-label="Nome Condomínio"><a href="{{ object.get_absolute_url }}">{{ condominio.nome }}</a></td>
+                                 <td data-label="Logradouro">{{ condominio.endereco }}</td>
+                                 <td data-label="Cidade">{{ condominio.cidade }}</td>
+                                 <td data-label="UF">{{ condominio.uf }}</td>
 
-                         </tr>
+                             </tr>
                           {% endfor %}
                       </tbody>
-             </table>
+                </table>
 
+            </div>
          </div>
 
 </div>
