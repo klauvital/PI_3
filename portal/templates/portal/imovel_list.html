@@ -28,7 +28,8 @@
                   </thead>
                     <tbody>
                         {% for object in object_list %}
-                            <tr>
+                          {% if object.status == "2" %}
+                            <tr class="bg-danger">
                                 <td> {{ object.dtacadastro|date:"d/m/Y" }} </td>
                                 <td> {{ object.tipo.nome }} </td>
                                 <td> {{ object.nomecondominio.nome }} </td>
@@ -48,6 +49,28 @@
                                         </td>
                                     {% endif %}
                             </tr>
+                            {% else %}
+                                <tr>
+                                <td> {{ object.dtacadastro|date:"d/m/Y" }} </td>
+                                <td> {{ object.tipo.nome }} </td>
+                                <td> {{ object.nomecondominio.nome }} </td>
+                                <td> {{ object.bairro }} </td>
+                                <td> {{ object.cidade }} </td>
+                                <td> {{ object.aconstruida }} </td>
+                                <td> {{ object.get_status_display }} </td>
+                                <td> {{ object.padrao.nome }} </td>
+                                <td> {{ object.estadoconser.nome }} </td>
+                                <td> {{ object.idade }} </td>
+                                <td> <a href="{{ object.get_absolute_url }}">{{ object.valordevenda }}</a></td>
+
+                                    {% if object.consultor.email == user.email %}
+                                        <td>
+                                            <a class ="btn btn-warning btn-sm" href="{% url 'imovel_edit' object.pk %}">Editar</a>
+                                             <a class ="btn btn-danger btn-sm" href="{% url 'criar_pesquisa' object.pk %}">Criar Pesquisa</a>
+                                        </td>
+                                    {% endif %}
+                            </tr>
+                            {% endif  %}
                         {% endfor %}
                     </tbody>
                 </table>
