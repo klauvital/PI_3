@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_filters',
     'portal.apps.PortalConfig',
     'portal.accounts',
+    'pytest',
 ]
 
 MIDDLEWARE = [

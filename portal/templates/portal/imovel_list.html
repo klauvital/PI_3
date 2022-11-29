@@ -44,7 +44,7 @@
                                     {% if object.consultor.email == user.email %}
                                         <td>
                                             <a class ="btn btn-warning btn-sm" href="{% url 'imovel_edit' object.pk %}">Editar</a>
-                                             <a class ="btn btn-danger btn-sm" href="{% url 'imovel_delete' object.pk %}" onclick="return confirm ('Deseja excluir o registro : {{ object.pk }} ?  ')">Excluir</a>
+                                             <a class ="btn btn-danger btn-sm" href="{% url 'criar_pesquisa' object.pk %}">Criar Pesquisa</a>
                                         </td>
                                     {% endif %}
                             </tr>

@@ -85,9 +85,8 @@ class ImovelForm(forms.ModelForm):
 
     )
     atotal =forms.DecimalField(
-        label='AC',
+        label='Área Total',
         initial=0,
-
     )
     lavabo = forms.BooleanField(
         label='Lavabo',

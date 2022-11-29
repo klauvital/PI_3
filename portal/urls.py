@@ -25,6 +25,7 @@ proprietario_urlpatterns = [
 
 pesquisa_urlpatterns = [
     path('add/', v.PesquisaCreateView.as_view(), name='pesquisa_form'),  # noqa E501
+    path('<int:pk>/', v.pesquisa_ref_imovel, name='criar_pesquisa'),
     path('<int:pk>/', v.PesquisaDetailView.as_view(), name='pesquisa_detail'), # noqa E501
     path('', v.PesquisaListView.as_view(), name='pesquisa_list'), # noqa E501
     path('<int:pk>', v.duplicar_create, name='duplicar'), # noqa E501

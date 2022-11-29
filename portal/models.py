@@ -192,7 +192,6 @@ class Imovel(models.Model):
             metro_quadrado = ((self.valordevenda) / (self.aconstruida))
             return round(float(metro_quadrado),2)
 
-
     def get_absolute_url(self):
         return reverse("imovel_detail", kwargs={"pk": self.id})
 

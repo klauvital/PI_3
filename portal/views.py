@@ -26,6 +26,33 @@ def home(request):
     return render(request, 'portal/home.html')
 
 
+def pesquisa_ref_imovel(request, pk):
+    imovel = get_object_or_404(Imovel, pk=pk)
+    pesquisa = Pesquisa.objects.all()
+
+    Pesquisa.objects.create(
+        data=datetime.date.today(),
+        uso=imovel.uso,
+        idade=int(imovel.idade),
+        aconstruida=float(imovel.aconstruida),
+        atotal=imovel.atotal,
+        bairro=imovel.bairro,
+        cidade=imovel.cidade,
+        estado=imovel.estado,
+        estadoconser_id=imovel.estadoconser.id,
+        nomecondominio_id=imovel.nomecondominio.id,
+        padrao_id=imovel.padrao.id,
+        tipo_id=imovel.tipo.id,
+        user_consultor_id=imovel.consultor.id,
+        status=imovel.status,
+        valor_avaliacao=0.00,
+    )
+
+
+    return redirect('pesquisa_list')
+
+
+
 class PesquisaCreateView(LRM, CreateView):
     model = Pesquisa
     form_class = PesquisaForm
