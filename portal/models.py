@@ -255,6 +255,7 @@ class Pesquisa(models.Model):
     cidade = models.CharField(max_length=200, default='Ribeirão Preto')
     estado = models.CharField(max_length=2, default='SP')
     user_consultor = models.ForeignKey(Proprietario, on_delete=models.CASCADE, blank=True, null=True, related_name='User_Consultor')
+    valor_venda = models.DecimalField('Valor Venda', default=0, max_digits=10, decimal_places=2)
     valor_avaliacao = models.DecimalField('Valor Avaliação',default=0,blank=True, null=True, max_digits=10, decimal_places=2)
 
     class Meta:

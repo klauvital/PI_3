@@ -9,10 +9,10 @@
     <div><h5 style="color:black">Dados do imóvel avaliando :</h5>
 
         <div class="font_topicos">
-            <div style="color:black;font-size: 20px">Localização </div> <span style="color:black">-<b>Nome do Condomínio:</b>  {{ dados.nomecondominio }}, <b>Bairro:</b> {{ dados.bairro }},<b>Cidade: {{ dados.cidade }} </b> ,
-            <b>Estado:</b> {{ dados.estado }}</span> </div>
-            <div style="color:black;font-size: 20px">Características </div><span style="color:black"> - <b> Uso:</b> {{ dados.get_uso_display }},
-              <b>Idade:</b> {{ dados.idade }}, <b>Área Construída:</b> {{ dados.aconstruida }}, <b>Tipo :</b> {{ dados.tipo.nome }},
+            <div style="color:black;font-size: 20px">Localização </div> <span style="color:black"> - <b> Nome do Condomínio: </b>  {{ dados.nomecondominio }}, <b>Bairro: </b> {{ dados.bairro }}, <b> Cidade:</b> {{ dados.cidade }}  ,
+            <b>Estado: </b> {{ dados.estado }}</span> </div>
+            <div style="color:black;font-size: 20px"> Características </div><span style="color:black"> - <b> Uso:</b> {{ dados.get_uso_display }},
+              <b>Idade:</b> {{ dados.idade }}, <b>Área Construída:</b> {{ dados.aconstruida }}, <b>Tipo : </b> {{ dados.tipo.nome }},
               <b>Padrão:</b> {{ dados.padrao.nome }}, <b>Conservação:</b> {{ dados.estadoconser }}</span>
         </div>
     </div>
@@ -21,6 +21,7 @@
                   <thead>
                     <tr class="bg-gradient-primary">
                         <th>ID</th>
+                        <th>Uso</th>
                         <th>Tipo</th>
                         <th>Padrâo</th>
                         <th>Condomínio</th>
@@ -29,39 +30,38 @@
                         <th>Status</th>
                         <th>EC</th>
                         <th>Idade</th>
-                        <th>Dif. Idade em % vida</th>
+                        <th>%_vida</th>
                         <th>Valor</th>
-                        <th>M² Inicial</th>
-                        <th> - 5% Oferta</th>
-                        <th>% Tabela</th>
+                        <th>M²_Inicial</th>
+                        <th>-5%_Oferta</th>
+                        <th>%_Tabela</th>
                         <th>Calculado</th>
-                        <th>M² Final</th>
+                        <th>M²_Final</th>
                     </tr>
-
                   </thead>
                   <tbody>
                      {% for imovel in lista %}
-                     <tr>
+
+                      <tr>
                          <td>{{ imovel.id }}</td>
+                         <td>{{ imovel.uso }}</td>
                          <td>{{ imovel.tipo }}</td>
                          <td>{{ imovel.padrao }} </td>
                          <td>{{ imovel.condominio }}</td>
                          <td>{{ imovel.bairro }}</td>
-                         <td>{{ imovel.ac }} </td>
+                         <td>{{ imovel.ac}} </td>
                          <td>{{ imovel.estatus }} </td>
                          <td>{{ imovel.ec }} </td>
                          <td>{{ imovel.idade }} </td>
                          <td>{{ imovel.idade_em_perc }}</td>
-                         <td>{{ imovel.valor }} </td>
+                         <td>{{ imovel.valor_venda }} </td>
                          <td>{{ imovel.metro_quadrado }} </td>
                          <td>{{ imovel.desconto_oferta }}</td>
                          <td>{{ imovel.valor_da_coluna  }}</td>
                          <td>{{ imovel.valor_tabela }}</td>
                          <td>{{ imovel.metro_quadrado_final }}</td>
-
                      </tr>
-                    {% endfor %}
-
+                     {% endfor %}
                   </tbody>
                 </table>
              <div><h4><b>Média m² = </b> {{ media_metro2 }} <b> x  Área Construída = </b>{{ area_construida  }} =>

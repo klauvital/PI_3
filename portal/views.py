@@ -45,6 +45,7 @@ def pesquisa_ref_imovel(request, pk):
         tipo_id=imovel.tipo.id,
         user_consultor_id=imovel.consultor.id,
         status=imovel.status,
+        valor_venda= imovel.valordevenda,
         valor_avaliacao=0.00,
     )
 
@@ -96,189 +97,6 @@ class PesquisaListView(LRM, ListView):
         )
 
         return context
-
-def pesquisa_imovel(request, pk):
-    pesquisa = get_object_or_404(Pesquisa, pk=pk)
-
-    if pesquisa:
-        uso = pesquisa.uso
-        idade = int(pesquisa.idade)
-        conservacao = pesquisa.estadoconser
-        padrao = pesquisa.padrao
-        tipo = pesquisa.tipo
-        aC = float(pesquisa.aconstruida)
-        atotal = pesquisa.atotal
-        condominio = pesquisa.nomecondominio
-        bairro = pesquisa.bairro
-        cidade = pesquisa.cidade
-        estado = pesquisa.estado
-
-        busca = Q(
-            Q(nomecondominio__nome=condominio)
-            | Q(bairro=bairro)
-            & Q(padrao__nome=padrao)
-            & Q(tipo__nome=tipo)
-        )
-
-        referenciais = Imovel.objects.filter(busca)
-
-        if referenciais.count() != 0:
-            # Alterando para fazer a avaliação
-            metro_quadr = float(0)
-            cont = 0
-            media_m2 = float(0)
-            gordura = 0
-            valorAvaliacao = 0
-            vidautil = 0
-            valor_tabela = 0
-            desconto_oferta = float(0)
-            metro_quadrado_inicial = float(0)
-            metro_quadrado_final = float(0)
-            idade_em_perc = 0
-            frase = ''
-            inversao = False
-            lista = []
-            for i in referenciais:
-                dicionario = {}
-                metro_quadr = float(0)
-                metro_quadr = i.metroquadrado()
-
-                if i.status == '1':
-                    desconto_oferta = round((metro_quadr * 0.05), 2)
-                    metro_quadr = metro_quadr - desconto_oferta
-
-                if idade == i.idade:
-                    cont += 1
-                    media_m2 += metro_quadr / cont
-                else:
-                    ec = i.estadoconser.codigo
-                    vidautil = (idade - i.idade)
-                    vidautil = round(vidautil * 100 / i.vidautil.idadevidautil)
-                    idade_em_perc = vidautil
-
-                    if vidautil < 0:
-                        vidautil = vidautil * -1
-                        inversao = True
-
-                    if vidautil == 0:
-                        vidautil = vidautil + 2
-
-                    if vidautil % 2 != 0:
-                        vidautil = vidautil + 1
-
-                    lst = [field.name for field in Tabelarossheideck._meta.get_fields()]
-
-                    # ec vem da lista de colunas da Tabelarossheideck
-
-                    # Dicionário vazio
-                    lorem = {}
-
-                    # Transforma o objeto Tabelarossheideck numa lista de dicionários.
-                    objeto_rossheideck = Tabelarossheideck.objects.filter(idade_em_vida=vidautil).values()
-                    primeiro_registro = objeto_rossheideck[0]
-
-                    # valor da coluna correspondente
-                    # primeiro_registro[ec] é como se fosse um dicionário
-                    # com chave e valor, mas no lugar da chave
-                    # usamos uma variável, porque a letra vem de ec.
-                    valor_da_coluna = primeiro_registro[ec]
-                    valor_tabela = round(metro_quadr * float(valor_da_coluna) / 100, 2)
-
-                    metro_quadrado_inicial = (i.metroquadrado())
-
-                    if inversao == True:
-                        metro_quadrado_final = (metro_quadrado_inicial - desconto_oferta + valor_tabela)
-
-                    else:
-                        metro_quadrado_final = (metro_quadrado_inicial - valor_tabela - desconto_oferta)
-
-                    cont += 1
-                    media_m2 = media_m2 + metro_quadrado_final
-                    dicionario['id'] = i.id
-                    dicionario['tipo'] = i.tipo.nome
-                    dicionario['padrao'] = i.padrao.nome
-                    dicionario['condominio'] = i.nomecondominio.nome
-                    dicionario['bairro'] = i.bairro
-                    dicionario['ac'] = i.aconstruida
-                    dicionario['ec'] = i.estadoconser.nome
-                    dicionario['idade'] = i.idade
-                    dicionario['estatus'] = i.status
-                    dicionario['valor'] = i.valordevenda
-                    dicionario['metro_quadrado'] = i.metroquadrado()
-                    dicionario['metro_quadrado_final'] = round(metro_quadrado_final, 2)
-                    dicionario['desconto_oferta'] = desconto_oferta
-                    dicionario['valor_da_coluna'] = valor_da_coluna
-                    dicionario['idade_em_perc'] = idade_em_perc
-                    dicionario['valor_tabela'] = valor_tabela
-                    lista.append(dicionario)
-
-            media_m2 = media_m2 / cont
-            valorAvaliacao = media_m2 * float(aC)
-            pesquisa.valor_avaliacao = valorAvaliacao
-            pesquisa.save()
-            media_m2 = "R$ {:,.2f}".format(media_m2).replace(",", "X").replace(".", ",").replace("X", ".")
-            valorAvaliacao = "R$ {:,.2f}".format(valorAvaliacao).replace(",", "X").replace(".", ",").replace(
-                "X", ".")
-
-            context = {
-                'lista': lista,
-                'referenciais': referenciais,
-                'dados': pesquisa,
-                'valor': valorAvaliacao,
-                'media_metro2': media_m2,
-                'area_construida': aC,
-            }
-            return render(request, 'portal/retorno_pesquisa.html', context=context)
-
-        else:
-            frase = "Não existe referenciais para os dados acima"
-
-            context = {
-                'dados': pesquisa,
-                'frase': frase,
-                'referenciais': referenciais,
-            }
-            return render(request, 'portal/retorno_pesquisa.html', context=context)
-
-
-def duplicar_create(pesquisa, pk):
-    pesquisa = get_object_or_404(Pesquisa, pk=pk)
-    conservacao =pesquisa.estadoconser.id
-    condominio = pesquisa.nomecondominio.id
-    padrao = pesquisa.padrao.id
-    tipo = pesquisa.padrao.id
-    consultor = pesquisa.user_consultor.id
-
-    if pesquisa:
-        Pesquisa.objects.create(
-        data = datetime.date.today(),
-        uso=pesquisa.uso,
-        idade=pesquisa.idade,
-        aconstruida=pesquisa.aconstruida,
-        atotal=pesquisa.atotal,
-        bairro=pesquisa.bairro,
-        cidade=pesquisa.cidade,
-        estado=pesquisa.estado,
-        estadoconser_id=conservacao,
-        nomecondominio_id=condominio,
-        padrao_id=padrao,
-        tipo_id=tipo,
-        user_consultor_id=consultor,
-        status=pesquisa.status,
-        valor_avaliacao=0.00,
-    )
-    pesquisa.save()
-    return redirect('pesquisa_list')
-
-
-class PesquisaUpdateView(LRM, UpdateView):
-    model = Pesquisa
-    form_class = PesquisaForm
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({'user': self.request.user})
-        return kwargs
 
 
 def referenciais(request):
@@ -380,6 +198,7 @@ def referenciais(request):
                     cont += 1
                     media_m2 += metro_quadrado_final
                     dicionario['id'] = i.id
+                    dicionario['uso'] = i.uso
                     dicionario['tipo'] = i.tipo.nome
                     dicionario['padrao'] = i.padrao.nome
                     dicionario['condominio'] = i.nomecondominio.nome
@@ -387,7 +206,7 @@ def referenciais(request):
                     dicionario['ac'] = i.aconstruida
                     dicionario['ec'] = i.estadoconser.nome
                     dicionario['idade'] = i.idade
-                    dicionario['estatus'] = i.status
+                    dicionario['estatus'] = i.get_status_display
                     dicionario['valor'] = i.valordevenda
                     dicionario['metro_quadrado'] = i.metroquadrado()
                     dicionario['metro_quadrado_final'] = round(metro_quadrado_final,2)
@@ -404,7 +223,7 @@ def referenciais(request):
 
             context = {
                'lista': lista,
-               'filtroCond': Listimovel,
+               'referenciais': Listimovel,
                'dados': dados,
                'valor': valorAvaliacao,
                'media_metro2': media_m2,
@@ -419,6 +238,217 @@ def referenciais(request):
                 'frase': frase,
             }
             return render(request, 'portal/referenciais_nulo.html', context=context)
+
+
+
+
+
+def pesquisa_imovel(request, pk):
+    pesquisa = get_object_or_404(Pesquisa, pk=pk)
+
+    if pesquisa:
+        uso = pesquisa.uso
+        idade = int(pesquisa.idade)
+        conservacao = pesquisa.estadoconser
+        padrao = pesquisa.padrao
+        tipo = pesquisa.tipo
+        aC = float(pesquisa.aconstruida)
+        atotal = pesquisa.atotal
+        condominio = pesquisa.nomecondominio
+        bairro = pesquisa.bairro
+        cidade = pesquisa.cidade
+        estado = pesquisa.estado
+
+
+
+        busca = Q(
+            Q(nomecondominio__nome=condominio)
+            | Q(bairro=bairro)
+            & Q(padrao__nome=padrao)
+            & Q(tipo__nome=tipo)
+        )
+        Listimovel = Imovel.objects.filter(busca)
+
+
+        if Listimovel.count() != 0:
+            metro_quadr = float(0)
+            cont = 0
+            media_m2 = float(0)
+            gordura = 0
+            valorAvaliacao = 0
+            vidautil = 0
+            valor_tabela = 0
+            valor_da_coluna = 0
+            desconto_oferta = float(0)
+            metro_quadrado_inicial = float(0)
+            metro_quadrado_final = float(0)
+            idade_em_perc = 0
+            valor_desc_oferta = 0
+            frase = ''
+            inversao = False
+            lista = []
+
+            for i in Listimovel:
+                dicionario = {}
+                metro_quadr = float(0)
+                metro_quadr = i.metroquadrado()
+                metro_quadrado_final = float(0)
+                valor_desc_oferta = float(0)
+                idade_em_perc = 0
+
+                #se for status oferta , desc 5%
+                if i.status == '1':
+                    desconto_oferta = round((metro_quadr * 0.05), 2)
+                    valor_desc_oferta = metro_quadr - desconto_oferta
+                else:
+                    desconto_oferta = 0
+                    valor_desc_oferta = metro_quadr - desconto_oferta
+
+
+                if idade == i.idade:
+                    cont += 1
+                    metro_quadrado_final = valor_desc_oferta
+                    valor_da_coluna = 0
+                    valor_tabela = 0
+                    vidautil = vidautil + 2
+                    vidautil = round(vidautil * 100 / i.vidautil.idadevidautil)
+
+                else:
+                    ec = i.estadoconser.codigo
+                    vidautil = (idade - i.idade)
+                    vidautil = round(vidautil * 100 / i.vidautil.idadevidautil)
+
+                    if vidautil % 2 != 0:
+                        vidautil = vidautil - 1
+                        idade_em_perc = vidautil
+
+                    if vidautil == 0:
+                        vidautil = vidautil + 2
+                        idade_em_perc = vidautil
+
+                    if vidautil < 0:
+                        idade_em_perc = vidautil
+                        vidautil = vidautil * -1
+                        inversao = True
+
+
+                    lst = [field.name for field in Tabelarossheideck._meta.get_fields()]
+
+                    # ec vem da lista de colunas da Tabelarossheideck
+
+                    # Dicionário vazio
+                    lorem = {}
+
+                    # Transforma o objeto Tabelarossheideck numa lista de dicionários.
+                    objeto_rossheideck = Tabelarossheideck.objects.filter(idade_em_vida=vidautil).values()
+                    primeiro_registro = objeto_rossheideck[0]
+
+                    # valor da coluna correspondente
+                    # primeiro_registro[ec] é como se fosse um dicionário
+                    # com chave e valor, mas no lugar da chave
+                    # usamos uma variável, porque a letra vem de ec.
+                    valor_da_coluna = primeiro_registro[ec]
+
+                    valor_tabela = round(valor_desc_oferta/(100 - float(valor_da_coluna)), 2) * 100
+
+                    metro_quadrado_inicial = (i.metroquadrado())
+
+                    if inversao == True:
+                        metro_quadrado_final = (valor_tabela)
+
+                    else:
+                        metro_quadrado_final = (valor_desc_oferta)
+
+                    cont += 1
+                media_m2 += metro_quadrado_final
+                dicionario['id'] = i.id
+                dicionario['uso'] = i.get_uso_display
+                dicionario['tipo'] = i.tipo
+                dicionario['padrao'] = i.padrao
+                dicionario['condominio'] = i.nomecondominio
+                dicionario['bairro'] = i.bairro
+                dicionario['ac'] = i.aconstruida
+                dicionario['ec'] = i.estadoconser
+                dicionario['idade'] = i.idade
+                dicionario['estatus'] = i.get_status_display
+                dicionario['valor_venda'] = i.valordevenda
+                dicionario['metro_quadrado'] = i.metroquadrado()
+                dicionario['metro_quadrado_final'] = round(metro_quadrado_final, 2)
+                dicionario['desconto_oferta'] = desconto_oferta
+                dicionario['valor_da_coluna'] = valor_da_coluna
+                dicionario['idade_em_perc'] = idade_em_perc
+                dicionario['valor_tabela'] = valor_tabela
+                lista.append(dicionario)
+
+            media_m2 = media_m2 / cont
+            valorAvaliacao = media_m2 * float(aC)
+            pesquisa.valor_avaliacao = valorAvaliacao
+            pesquisa.save()
+            media_m2 = "R$ {:,.2f}".format(media_m2).replace(",", "X").replace(".", ",").replace("X", ".")
+            valorAvaliacao = "R$ {:,.2f}".format(valorAvaliacao).replace(",", "X").replace(".", ",").replace(
+                "X", ".")
+
+            context = {
+                'lista': lista,
+                'referenciais': Listimovel,
+                'dados': pesquisa,
+                'valor': valorAvaliacao,
+                'media_metro2': media_m2,
+                'area_construida': aC,
+            }
+            return render(request, 'portal/retorno_pesquisa.html', context=context)
+
+        else:
+            frase = "Não existe referenciais para os dados acima"
+
+            context = {
+                'dados': pesquisa,
+                'frase': frase,
+
+            }
+            return render(request, 'portal/retorno_pesquisa.html', context=context)
+
+
+def duplicar_create(pesquisa, pk):
+    pesquisa = get_object_or_404(Pesquisa, pk=pk)
+    conservacao =pesquisa.estadoconser.id
+    condominio = pesquisa.nomecondominio.id
+    padrao = pesquisa.padrao.id
+    tipo = pesquisa.padrao.id
+    consultor = pesquisa.user_consultor.id
+
+    if pesquisa:
+        Pesquisa.objects.create(
+        data = datetime.date.today(),
+        uso=pesquisa.uso,
+        idade=pesquisa.idade,
+        aconstruida=pesquisa.aconstruida,
+        atotal=pesquisa.atotal,
+        bairro=pesquisa.bairro,
+        cidade=pesquisa.cidade,
+        estado=pesquisa.estado,
+        estadoconser_id=conservacao,
+        nomecondominio_id=condominio,
+        padrao_id=padrao,
+        tipo_id=tipo,
+        user_consultor_id=consultor,
+        status=pesquisa.status,
+        valor_venda=0.00,
+        valor_avaliacao=0.00,
+    )
+    pesquisa.save()
+    return redirect('pesquisa_list')
+
+
+class PesquisaUpdateView(LRM, UpdateView):
+    model = Pesquisa
+    form_class = PesquisaForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
 
 
 def imovel_edit(request, imovel_pk):
