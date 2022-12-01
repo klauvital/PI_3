@@ -295,11 +295,13 @@ def pesquisa_imovel(request, pk):
                 metro_quadrado_final = float(0)
                 valor_desc_oferta = float(0)
                 idade_em_perc = 0
+                valor_desc_idade = 0
 
                 #se for status oferta , desc 5%
                 if i.status == '1':
                     desconto_oferta = round((metro_quadr * 0.05), 2)
-                    valor_desc_oferta = metro_quadr - desconto_oferta
+                    valor_desc_oferta = ( metro_quadr - desconto_oferta)
+
                 else:
                     desconto_oferta = 0
                     valor_desc_oferta = metro_quadr - desconto_oferta
@@ -350,6 +352,7 @@ def pesquisa_imovel(request, pk):
                     valor_da_coluna = primeiro_registro[ec]
 
                     valor_tabela = round(valor_desc_oferta/(100 - float(valor_da_coluna)), 2) * 100
+                    valor_desc_idade = (round(valor_tabela - valor_desc_oferta),2)
 
                     metro_quadrado_inicial = (i.metroquadrado())
 
@@ -377,7 +380,7 @@ def pesquisa_imovel(request, pk):
                 dicionario['desconto_oferta'] = desconto_oferta
                 dicionario['valor_da_coluna'] = valor_da_coluna
                 dicionario['idade_em_perc'] = idade_em_perc
-                dicionario['valor_tabela'] = valor_tabela
+                dicionario['valor_tabela'] = valor_desc_idade
                 lista.append(dicionario)
 
             media_m2 = media_m2 / cont
